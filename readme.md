@@ -1,1 +1,1 @@
-[mydreamday.fi](https://mydreamday.fi) (Magento 2).
+[mydreamday.fi](https://mydreamday.fi) (Magento 2.4.6).
