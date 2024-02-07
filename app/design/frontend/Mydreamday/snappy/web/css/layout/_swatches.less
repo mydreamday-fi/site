@@ -1,0 +1,153 @@
+& when (@critical) {
+    .swatch-attribute {
+        margin-bottom: @swatch-options__margin-bottom;
+        &:last-child {
+            margin: 0;
+        }
+        .product-item & {
+            .lib-css(margin-bottom, @listing-swatch-options__margin-bottom);
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+    .swatch-attribute-label {
+        font-weight: @swatch-label__font-weight;
+        .margin-right(@1);
+        ~ .swatch-attribute-options {
+            margin-top: @swatch-options__margin-top;
+        }
+    }
+    .swatch-attribute-options {
+        display: flex;
+        flex-wrap: wrap;
+
+        .product-item & {
+            .lib-css(gap, @listing-swatch__gap);
+        }
+        :where(.products-grid, .widget-product-carousel) & {
+            .lib-css(justify-content, @listing-swatch-options__justify-content);
+        }
+    }
+    .swatch-option {
+        .lib-css(font-family, @swatch__font-family);
+        .lib-css(font-size, @swatch__font-size);
+        .lib-css(font-weight, @swatch__font-weight);
+        color: @muted__color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        min-width: @swatch__size;
+        height: @swatch__size;
+        padding: 0 @1;
+        background: @muted__background;
+        position: relative;
+        margin: abs(@swatch__border-offset);
+        .lib-css(border-radius, @swatch__border-radius);
+
+        &-link-layered {
+            .lib-css(border-radius, @swatch__border-radius);
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            .lib-css(border-radius, @swatch__border-radius);
+            top: @swatch__border-offset;
+            bottom: @swatch__border-offset;
+            left: @swatch__border-offset;
+            right: @swatch__border-offset;
+        }
+
+        .product-item & {
+            .lib-css(font-size, @listing-swatch__font-size);
+            .lib-css(font-weight, @listing-swatch__font-weight);
+            .lib-css(min-width, @listing-swatch__size);
+            .lib-css(height, @listing-swatch__size);
+            & when not (@listing-swatch__border-offset = false) {
+                margin: abs(@listing-swatch__border-offset);
+            }
+            &::before {
+                .lib-css(top, @listing-swatch__border-offset);
+                .lib-css(bottom, @listing-swatch__border-offset);
+                .lib-css(left, @listing-swatch__border-offset);
+                .lib-css(right, @listing-swatch__border-offset);
+            }
+        }
+    }
+    input.swatch-input {
+        position: absolute;
+        visibility: hidden;
+        .left(-9999px);
+        .actions-primary & {
+            display: none; // disable validation in product listing
+        }
+    }
+    .product-item {
+        [class^="swatch-opt-"] {
+            .lib-css(margin, @listing-swatch-wrapper__margin);
+
+            & when not (@listing-swatch-wrapper__media-hidden = false) {
+                @media @listing-swatch-wrapper__media-hidden {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.swatch-option-tooltip {
+    &:extend(.breeze-z-layer all);
+    &[style*="block"] {
+        &:extend(.breeze-z-layer-visible);
+    }
+}
+
+& when not (@critical) {
+    .swatch-option-tooltip {
+        .breeze-text-sm();
+        .right(auto);
+        transform-origin: bottom;
+        width: auto;
+        text-align: center;
+        padding: @1;
+        min-width: @8;
+    }
+    .swatch-option {
+        &.selected {
+            &::before {
+                box-shadow: 0 0 0 2px inset @brand__color,
+                            0 0 0 3px inset @white;
+            }
+        }
+        &.disabled {
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to left top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 42%, #ffffff 43%, #ffffff 46%, #ff5216 47%, #ff5216 53%, #ffffff 54%, #ffffff 57%, rgba(255, 255, 255, 0) 58%, rgba(255, 255, 255, 0) 100%);
+            }
+        }
+    }
+    .product-item-info-image-loading {
+        .product-item-photo {
+            &::before {
+                content: '';
+                &:extend(.spinner);
+                border-color: @base__color;
+                border-top-color: transparent;
+                opacity: .3;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                margin-top: -@3;
+                .margin-left(-@2-5);
+            }
+            img,
+            picture {
+                opacity: .5;
+            }
+        }
+    }
+}

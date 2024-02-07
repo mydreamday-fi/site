@@ -1,0 +1,125 @@
+@font-size__xs: @2-5;
+@font-size__sm: @3;
+@font-size__base: @3-5;
+@font-size__lg: @4;
+@font-size__xl: @4-5;
+@font-size__2xl: @5;
+@font-size__3xl: @7;
+@font-size__4xl: @8-5;
+@font-size__5xl: @11;
+
+@line-height__xs: @4;
+@line-height__sm: @5;
+@line-height__base: @6;
+@line-height__lg: @7;
+@line-height__xl: @7;
+@line-height__2xl: @8;
+@line-height__3xl: @9;
+@line-height__4xl: @10;
+@line-height__5xl: 1;
+
+@font-sans:  'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+@font-mono:  ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+@base__font-family: @font-sans;
+@base__font-size: @font-size__base;
+@base__line-height: @line-height__base;
+@base__text-color: @gray-900;
+@base__text-alpha: 1;
+@base__color: ~"rgba(var(--base-color), var(--base-alpha, 1))";
+
+@selection__color: false;
+@selection__background: false;
+
+@headings__font-family: false;
+@headings__text-transform: false;
+@headings__text-color: var(--base-color);
+@headings__text-alpha: 1;
+@headings__color: ~"rgba(var(--headings-color), var(--headings-alpha, 1))";
+
+@h1__font-size: @font-size__3xl;
+@h1__font-weight: 500;
+@h1__line-height: @line-height__3xl;
+@h1__text-transform: false;
+@h1__margin-top: @8;
+@h1__margin-bottom: @4;
+
+@h2__font-size: @font-size__3xl;
+@h2__font-weight: 600;
+@h2__line-height: @line-height__3xl;
+@h2__text-transform: false;
+@h2__margin-top: @8;
+@h2__margin-bottom: @4;
+
+@h3__font-size: @font-size__2xl;
+@h3__font-weight: 600;
+@h3__line-height: @line-height__2xl;
+@h3__text-transform: false;
+@h3__margin-top: @4;
+@h3__margin-bottom: @2;
+
+@h4__font-size: @font-size__xl;
+@h4__font-weight: 600;
+@h4__line-height: @line-height__xl;
+@h4__text-transform: false;
+@h4__margin-top: false;
+@h4__margin-bottom: @1;
+
+@h5__font-size: false;
+@h5__font-weight: false;
+@h5__line-height: false;
+@h5__text-transform: false;
+@h5__margin-top: false;
+@h5__margin-bottom: @1;
+
+@h6__font-size: false;
+@h6__font-weight: false;
+@h6__line-height: false;
+@h6__text-transform: false;
+@h6__margin-top: false;
+@h6__margin-bottom: @1;
+
+@link__text-decoration: none;
+@link__hover__text-decoration: underline;
+@link__text-color: var(--blue);
+@link__text-alpha: .85;
+@link__color: ~"rgba(var(--link-color), var(--link-alpha))";
+
+@danger__text-color: var(--red);
+@danger__color: ~"rgba(var(--danger-color), var(--danger-alpha, 1))";
+@danger__background-color: var(--red-muted);
+@danger__background: ~"rgba(var(--danger-bg), var(--danger-bg-alpha, 1))";
+
+@success__text-color: var(--green);
+@success__color: ~"rgba(var(--success-color), var(--success-alpha, 1))";
+@success__background-color: var(--green-muted);
+@success__background: ~"rgba(var(--success-bg), var(--success-bg-alpha, 1))";
+
+@info__text-color: var(--blue);
+@info__color: ~"rgba(var(--info-color), var(--info-alpha, 1))";
+@info__background-color: var(--blue-muted);
+@info__background: ~"rgba(var(--info-bg), var(--info-bg-alpha, 1))";
+
+@ring__width: 2px;
+@ring__offset: 1px;
+@ring__text-color: var(--brand-color);
+@ring__color: ~"rgba(var(--ring-color), var(--ring-alpha, 1))";
+
+@base__inverted__text-color: @white;
+@base__inverted__text-alpha: .85;
+@headings__inverted__text-color: @base__inverted__text-color;
+@headings__inverted__text-alpha: .9;
+@link__inverted__text-color: @blue-300;
+@link__inverted__text-alpha: .9;
+@ring__inverted__text-color: @base__inverted__text-color;
+@ring__inverted__text-alpha: .7;
+@muted__inverted__background-color: @white;
+@muted__inverted__background-alpha: .05;
+@button__inverted__background-color: false;
+@button__inverted__border-color: @button__inverted__background-color;
+@button__inverted__text-color: false;
+@input__inverted__background-color: false;
+@input__inverted__background-alpha: 0;
+@input__inverted__border-color: false;
+@input__inverted__border-alpha: .5;

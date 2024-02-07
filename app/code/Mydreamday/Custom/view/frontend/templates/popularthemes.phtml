@@ -1,0 +1,80 @@
+<?php
+$categories = $block->getSubcategories(11);
+if ($categories): ?>
+	<div class="glider-contain" style="margin-top:2rem;max-width: 1260px;">
+		<h2 class="text-center"><span class="content"><?php echo __('Popular Themes'); ?></span></h2>
+
+		<div class="row glider-popular-themes">
+			<?php foreach ($categories as $category): ?>
+				<div class="glider-item col-md-3 col-xs-6" style="padding:0 7px;">
+					<a class="image-link" href="<?php echo $category->getUrl() ?>">
+						<?php 
+						$imageUrl = $block->getCategoryThumbImage($category);
+						if ($imageUrl): ?>
+							<img src="<?php echo $imageUrl; ?>" alt="<?php echo $category->getName() ?>"/>
+						<?php else: ?>
+							<!-- You can add a placeholder image here -->
+						<?php endif; ?>
+						<div class="feature-box-heading text-center">
+							<span><?php echo $category->getName() ?></span>
+						</div>
+					</a>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<button aria-label="Previous" class="glider-prev glider-popular-themes-prev"></button>
+		<button aria-label="Next" class="glider-next glider-popular-themes-next"></button>
+	</div>
+	
+	<div class="row boxy_button_container" style="padding-bottom:2rem;">
+		<?php $category = $block->getCategoryById(11); // fetching category object for category ID 11 ?>
+		<a class="boxy_button" href="<?php echo $category->getUrl(); ?>">
+			<span><?php echo __('All Kids Birthdays Parties'); ?></span>
+		</a>
+	</div>
+	
+<?php endif; ?>
+
+<script type="text/javascript">
+    window.addEventListener('load', function () {
+		// Initialize Glider
+		const myGliderPopular = new Glider(document.querySelector('.glider-popular-themes'), {
+			slidesToShow: 2.3,
+			slidesToScroll: 1,
+			scrollLock: false,
+			draggable: true,
+			dots: false,
+			rewind: true,
+			duration: 0.6,
+			dragVelocity: 1,
+			scrollLockDelay: 100,
+			arrows: {
+				prev: '.glider-popular-themes-prev',
+				next: '.glider-popular-themes-next'
+			},
+			responsive: [
+				{
+					breakpoint: 1200,
+					settings: {
+						slidesToShow: 5,
+						slidesToScroll: 2
+					}
+				},
+				{
+					breakpoint: 991,
+					settings: {
+						slidesToShow: 4,
+						slidesToScroll: 2
+					}
+				},
+				{
+					breakpoint: 768,
+					settings: {
+						slidesToShow: 3,
+						slidesToScroll: 2
+					}
+				}
+			]
+		});
+	});
+</script>

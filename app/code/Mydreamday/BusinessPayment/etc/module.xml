@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Mydreamday_BusinessPayment" setup_version="1.0.0">
+        <sequence>
+            <!--
+                Define other modules that your module depends on:
+                - Magento_Customer is important for customer group handling.
+                - Magento_Payment is needed for payment functionalities.
+            -->
+            <module name="Magento_Customer"/>
+            <module name="Magento_Payment"/>
+        </sequence>
+    </module>
+</config>

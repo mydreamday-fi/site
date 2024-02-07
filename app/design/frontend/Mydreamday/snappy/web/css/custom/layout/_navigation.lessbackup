@@ -1,0 +1,8 @@
+& when (@critical) {
+
+    .navigation {
+        li {
+            position: unset;
+        }
+	}
+}

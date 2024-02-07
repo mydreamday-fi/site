@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+				<resource id="Magento_Sales::sales">
+                	<resource id="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction" title="Customer Group Restriction" sortOrder="100">
+                    	<resource id="Meetanshi_PayshipRestriction::menu_payment" title="Payment Method Restriction" sortOrder="80" />
+                        <resource id="Meetanshi_PayshipRestriction::menu_shipping" title="Shipping Method Restriction" sortOrder="80" />
+                    </resource>
+				</resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Meetanshi_PayshipRestriction::payshipconfig" title="Customer Group Restriction" sortOrder="61" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

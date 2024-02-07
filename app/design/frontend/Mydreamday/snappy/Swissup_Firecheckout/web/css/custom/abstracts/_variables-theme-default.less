@@ -1,0 +1,83 @@
+@fc-section-number__background: #000;
+@fc__accent-color: #000;
+.firecheckout {
+    @{fc-wrapper__selector} {
+        .step-content {
+            margin: 0;
+            > * + .form-shipping-address {
+                margin-top: 0px;
+				margin-bottom: 0px;
+				padding: 0;
+            }
+        }
+    }
+}
+@media (max-width: 639px) {
+	.firecheckout.checkout-index-index #checkout .opc-wrapper .form-login {
+		margin: 0;
+	}
+}
+.firecheckout .opc-block-summary .product-item .price {
+	font-weight: 600;
+}
+.firecheckout .opc-block-summary > .title {
+	color: #000;
+}
+.firecheckout .opc-block-summary .product-item .product-item-name-block {
+	vertical-align: middle;
+}
+.firecheckout.checkout-index-index #checkout .opc-block-summary .details-qty .qty-wrapper {
+    width: 85px;
+	height: 35px;
+}
+.firecheckout.checkout-index-index #checkout .opc-block-summary .details-qty .qty-wrapper input {
+    margin-left: 25px;
+	height: 35px !important;
+	width: 35px !important;
+}
+.firecheckout.checkout-index-index #checkout .opc-block-summary .details-qty .qty-wrapper .qty-less {
+    top: 0;
+	left: 0;
+	width: 25px;
+	position: absolute;
+	border-left: 0px;
+	height: 35px;
+    border-right: 1px solid #ccc;
+}
+.firecheckout.checkout-index-index #checkout .opc-block-summary .details-qty .qty-wrapper .qty-more {
+    top: 0;
+	right: 0;
+	width: 25px;
+	position: absolute;
+	height: 35px;
+	border-right: 0px;
+    border-left: 1px solid #ccc;
+}
+.firecheckout .minicart-items .product-item-name {
+    font-size: 0.9rem;
+}
+.firecheckout .place-order .actions-toolbar .primary .action {
+	font-size: 1.8rem;
+	font-weight: 500;
+	font-family: 'Montserrat';
+	letter-spacing: 0.5px;
+}
+.firecheckout .checkout-payment-method .payment-method-title {
+	border: 0px;
+}
+.firecheckout .checkout-payment-method .payment-method {
+	border-bottom: 1px solid #ddd;
+	padding: 8px 0;
+	margin: 0 20px;
+}
+@media (max-width: 767px) {
+	.firecheckout .checkout-payment-method .payment-method {
+		padding: 6px 0;
+		margin: 0;
+	}
+}
+.checkout-payment-method .payment-method-title .payment-icon {
+	position: absolute;
+	top: 0;
+	right: 0;
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Mydreamday_Navigation::css/mobile-nav.css" media="screen and (max-width: 768px)"/>
+        <css src="Mydreamday_Navigation::css/mmenu-light.css" media="screen and (max-width: 768px)"/>
+        <css src="Mydreamday_Navigation::css/slideout.css" media="screen and (max-width: 768px)"/>
+    </head>
+</page>

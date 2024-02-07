@@ -1,0 +1,459 @@
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var metaCharset = document.createElement('meta');
+        metaCharset.setAttribute('charset', 'UTF-8');
+        document.getElementsByTagName('head')[0].appendChild(metaCharset);
+        
+        var metaViewport = document.createElement('meta');
+        metaViewport.name = 'viewport';
+        metaViewport.content = 'width=device-width, initial-scale=1.0';
+        document.getElementsByTagName('head')[0].appendChild(metaViewport);
+    });
+</script>
+<?php 
+$productId = $block->getProductId();
+$productName = $block->getProductName();
+$qty = $block->getQty();
+$shelfLocation = $block->getShelfLocation();
+?>
+
+<audio id="beep" src="<?php echo $block->getViewFileUrl('Mydreamday_Saldo::media/beep.mp3'); ?>" preload="auto"></audio>
+<div id="ajaxUrl" data-url="<?= $block->getUrl('saldo/index/updateqty'); ?>"></div>
+<div class="hamburger-icon">&#9776;</div>
+
+<form id="saldo-check-form" action="<?php echo $block->getUrl('saldo/index/search'); ?>" method="post">
+    <input type="text" name="sku" placeholder="Enter EAN code (SKU)" required>
+    <button type="button" id="check_button">Search</button>
+</form>
+
+<!-- Container for the scanner -->
+<div id="scanner-container">
+    <video id="video" width="100%" height="100" style="border: 1px solid black;"></video>
+    <div id="laser"></div>
+</div>
+<button id="startButton">Start Scanner</button>
+<div id="result">
+</div>
+
+<!-- Modal Structure -->
+<div id="quantityModal" class="modal">
+    <div class="modal-content">
+        <input type="number" id="newQuantity" name="newQuantity" value="">
+    </div>
+    <div class="modal-footer">
+		<button id="updateQuantityBtn" class="modal-close waves-effect waves-green btn-flat">Update</button>
+	</div>
+</div>
+
+<!-- Modal Structure for Shelf Location -->
+<div id="shelfLocationModal" class="modal">
+    <div class="modal-content">
+        <input type="text" id="newShelfLocation" name="newShelfLocation" value="">
+    </div>
+    <div class="modal-footer">
+        <button id="updateShelfLocationBtn" class="modal-close waves-effect waves-green btn-flat">Update</button>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var currentQtyGlobal;
+    var currentShelfLocationGlobal;
+    
+    require(['jquery'], function($) {
+        $('#check_button').on('click', function() {
+            var skuCode = $('[name=sku]').val();
+            if (skuCode) {
+                $.ajax({
+                    url: '<?= $block->getUrl('saldo/index/search') ?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {sku: skuCode},
+                    showLoader: true,
+                    success: function(response) {
+						if (response.success) {
+							var shelfLocation = response.data.shelfLocation || 'N/A'; // Fetching from response.data.shelfLocation
+							$('#result').html(
+								'<div style="display: flex; align-items: center;">' +
+								'<img src="' + response.data.thumbnailUrl + '" alt="Product Thumbnail" style="max-width: 100px; margin-right: 5px;">' +
+								'<div>' +
+								'<p>SKU: ' + response.data.sku + '</p>' + 
+								'<p>Product Name: ' + response.data.productName + '</p>' +
+								'<p id="displayShelfLocation">Shelf Location: ' + shelfLocation + '</p>' + // Using the shelfLocation variable here
+								'<p>Salable Quantity: ' + response.data.salableQty + '</p>' +
+								'<p id="displayQty"><strong>Quantity: ' + response.data.qty + '</strong></p>' +
+								'</div>' +
+								'</div>' +
+								'<button id="updateBtn">Update Quantity</button>' +
+								'<button id="openShelfLocationModal">Update Shelf Location</button>'
+							);
+							
+							$('#updateBtn').on('click', function() {
+								$('#newQuantity').val(currentQtyGlobal);
+								$("#quantityModal").modal("openModal");
+							});
+							
+							$('#openShelfLocationModal').on('click', function() { // Updated ID
+								$('#newShelfLocation').val(currentShelfLocationGlobal); // Set the current shelf location in the modal input
+								$("#shelfLocationModal").modal("openModal");
+							});
+							
+							currentQtyGlobal = response.data.qty;
+							currentShelfLocationGlobal = shelfLocation; // Store the current shelf location
+							
+						} else {
+							alert(response.message || 'An error occurred while updating the shelf location.');
+						}
+					}
+					,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Error: ', textStatus, errorThrown); // Log any errors
+                        alert('An error occurred while processing your request. Please try again.');
+                    }
+                });
+            } else {
+                alert('Please enter an EAN code.');
+            }
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    function showNotification(message, duration) {
+		var notification = jQuery('<div />').addClass('custom-alert').text(message);
+		jQuery('body').append(notification);
+		setTimeout(function() {
+			notification.remove();
+		}, duration);
+	}
+	
+	require(['jquery', 'Magento_Ui/js/modal/modal'], function($, modal) {
+        var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            title: 'Update Quantity',
+            buttons: []
+        };
+
+        var popup = modal(options, $('#quantityModal')); // Initialize the modal
+
+        $(document).on('click', '#updateBtn', function () {
+            $('#newQuantity').val(currentQtyGlobal); // Set the current quantity in the modal input
+            $("#quantityModal").modal("openModal"); // Open the modal
+        });
+
+        // Adding an event listener to the update button
+        $(document).on('click', '#updateQuantityBtn', function() {
+            var newQty = $('#newQuantity').val(); // Get the new quantity value
+            updateQuantity(newQty); // Function to handle the AJAX request
+        });
+
+        // Function to Update the Quantity via an AJAX request
+        function updateQuantity(newQty) {
+            var updateUrl = $('#ajaxUrl').data('url'); // Get the URL for the AJAX request
+            var productSku = $('[name=sku]').val(); // Get the product SKU
+
+            $.ajax({
+                url: updateUrl,
+                type: 'POST',
+                data: {
+                    'newQuantity': newQty,
+                    'sku': productSku
+                },
+                success: function (response) {
+					if(response.success) {
+						$("#quantityModal").modal("closeModal");
+						
+						// Get the new quantity from the modal input
+						var updatedQty = $('#newQuantity').val();
+						
+						// Update the displayed quantity with the new quantity from the modal
+						$('#displayQty').html('<strong>Quantity: ' + updatedQty + '</strong>');
+						
+						showNotification('Quantity updated successfully.', 3000);
+					} else {
+						alert('Failed to update quantity.');
+					}
+				},
+				error: function () {
+					alert('An error occurred while updating the quantity.');
+				}
+            });
+        }
+    });
+</script>
+<script type="text/javascript">
+    require(['jquery', 'Magento_Ui/js/modal/modal'], function($, modal) {
+        var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            title: 'Update Shelf Location',
+            buttons: []
+        };
+
+        var popup = modal(options, $('#shelfLocationModal')); // Initialize the modal for shelf location
+
+        $(document).on('click', '#updateShelfLocationBtn', function() {
+            var newLocation = $('#newShelfLocation').val(); // Get the new shelf location value
+            updateShelfLocation(newLocation); // Function to handle the AJAX request for updating shelf location
+        });
+
+        // Function to Update the Shelf Location via an AJAX request
+        function updateShelfLocation(newLocation) {
+            var updateUrl = $('#ajaxUrl').data('url'); // Get the URL for the AJAX request
+            var productSku = $('[name=sku]').val(); // Get the product SKU
+
+            $.ajax({
+                url: updateUrl,
+                type: 'POST',
+                data: {
+                    'newShelfLocation': newLocation,
+                    'sku': productSku
+                },
+                success: function (response) {
+                    if(response.success) {
+                        $("#shelfLocationModal").modal("closeModal"); // Close the modal
+
+                        // Show custom notification
+                        showNotification('Shelf location updated successfully.', 3000);
+
+                        // Update the displayed shelf location
+                        $('#displayShelfLocation').html('<p>Shelf Location: ' + response.data.shelfLocation + '</p>');
+                    } else {
+                        alert('Failed to update shelf location.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while updating the shelf location.');
+                }
+            });
+        }
+    });
+</script>
+
+<script>
+    require(['jquery'], function($) {
+        $(document).ready(function() {
+            $('.hamburger-icon').click(function() {
+                var menuWrapper = $('.menu-wrapper');
+                var pageWrapper = $('.page-wrapper');
+                if (menuWrapper.css('display') === 'none') {
+                    menuWrapper.css('display', 'inline-block');
+                    $('.hamburger-icon').css('left', '98px'); // Move the icon when menu is open
+                    pageWrapper.css('width', 'calc(100% - 8.800000000000001rem)'); // Adjust width when menu is open
+                } else {
+                    menuWrapper.css('display', 'none');
+                    $('.hamburger-icon').css('left', '10px'); // Move the icon back when menu is closed
+                    pageWrapper.css('width', '100%'); // Adjust width when menu is closed
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    require(['jquery'], function($) {
+
+        const video = document.getElementById('video');
+        const startButton = document.getElementById('startButton');
+        let scanning = false; // Flag to control scanning
+
+        startButton.addEventListener('click', () => {
+            if (scanning) {
+                stopScanning();
+            } else {
+                startScanning();
+            }
+        });
+
+        function startScanning() {
+            scanning = true;
+            startButton.innerText = 'Stop Scanning';
+			
+			document.getElementById('laser').style.display = 'block';
+
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.setAttribute("playsinline", true); // Required to tell iOS Safari we don't want fullscreen
+                    video.play();
+                    requestAnimationFrame(tick);
+                });
+        }
+
+        function stopScanning() {
+            scanning = false;
+            startButton.innerText = 'Start Scanning';
+			
+			document.getElementById('laser').style.display = 'none';
+
+            // Stop all video streams
+            video.srcObject.getTracks().forEach(track => {
+                track.stop();
+            });
+            video.srcObject = null;
+        }
+
+        function tick() {
+            if (scanning) {
+                detectBarcode();
+                requestAnimationFrame(tick);
+            }
+        }
+
+        async function detectBarcode() {
+            try {
+                const barcodes = await new BarcodeDetector().detect(video);
+                barcodes.forEach(barcode => handleBarcode(barcode));
+            } catch (e) {
+                console.error('Barcode detection failed:', e);
+            }
+        }
+
+        function handleBarcode(barcode) {
+            if (barcode.format === 'ean_13' || barcode.rawValue.length === 12) {
+                $('[name=sku]').val(barcode.rawValue);
+                $('#check_button').trigger('click'); // Trigger the check button click event
+				
+				document.getElementById('beep').play(); // Playing the beep sound
+				
+                stopScanning(); // Stop scanning after successful detection
+            }
+        }
+    });
+</script>
+
+<style>
+    body.saldo-index-index {
+		min-width: unset;
+	}
+	.notices-wrapper {
+		min-height: unset;
+	}
+	#scanner-container {
+        position: relative;
+        width: 300px;
+        height: 100px;
+    }
+    
+    #video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    #laser {
+        display: none;
+		position: absolute;
+        top: 50%; /* Adjust this value to move the laser line up or down */
+        left: 0;
+        height: 2px; /* Thickness of the laser line */
+        width: 100%;
+        background-color: red;
+        animation: scanning 2s linear infinite;
+    }
+    
+    /* Animation to create a scanning effect */
+    @keyframes scanning {
+        0% { top: 0; }
+        100% { top: 100%; }
+    }
+	.custom-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    background-color: #28a745; /* green */
+    color: white;
+    z-index: 10000;
+    border-radius: 5px;
+	}
+	#result p {
+		margin: 0.2em 0;
+	}
+	@media (max-width: 768px) {
+        .menu-wrapper {
+			display: none;
+		}
+		.page-wrapper {
+			width: 100%;
+		}
+
+		.hamburger-icon {
+			display: block;
+			cursor: pointer;
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			font-size: large;
+		}
+		
+		/* Adjusting the main container */
+        #scanner-container {
+            width: 100%;
+            height: 100px;
+        }
+
+        /* Adjusting the video width */
+        #video {
+            width: 100%;
+            height: 100px;
+        }
+
+        /* Adjusting the form and input field styles */
+        form#saldo-check-form {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+			margin-bottom: 10px;
+			gap: 5px;
+        }
+
+        form#saldo-check-form input[type="text"] {
+            width: 60%;
+        }
+
+        /* Adjusting buttons for a better mobile touch experience */
+        #startButton, #updateBtn, #updateQuantityBtn, #openShelfLocationModal {
+            padding: 10px;
+            width: 100%;
+        }
+		#startButton {
+			background-color: #cddbcd;
+			margin: 5px 0;
+		}
+		#openShelfLocationModal {
+			background-color: #bed3e5;
+			margin: 5px 0;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+		}
+		#check_button {
+			padding: 10px;
+            width: 40%;
+		}
+		#updateBtn, #updateQuantityBtn {
+			background-color: #cb5953;
+			color: #ffffff;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			margin: 5px 0;
+		}
+		.modal-popup.modal-slide {
+			left: 10rem;
+		}
+		.modal-slide._inner-scroll .modal-footer, .modal-popup._inner-scroll .modal-content {
+			padding: 5px 12px;
+		}
+		.modal-popup._inner-scroll .modal-content input {
+			width: 100%;
+			line-height: 30px;
+			font-size: 20px;
+			text-align: center;
+		}
+    }
+</style>
+

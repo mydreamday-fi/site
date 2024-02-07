@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body> 
+        <referenceBlock name="store_language" remove="true"/>
+        <referenceBlock name="cookie-status-check" remove="false"/>
+        <referenceBlock name="currency" remove="true"/>
+        <referenceBlock name="store.settings" remove="true"/>
+        <referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-billing-agreements-link" remove="true"/>
+        <referenceContainer name="page.messages">
+            <referenceBlock name="messages" remove="true"/>
+        </referenceContainer>
+        <move element="store.menu" destination="navigation.wrapper"/>
+		<referenceContainer name="content">
+			<container name="sidebar.additional" as="sidebar_additional" label="Sidebar Additional" htmlTag="div" htmlClass="sidebar sidebar-additional"/>
+		</referenceContainer>
+
+		<referenceBlock name="catalog.compare.sidebar" remove="true" />
+		<referenceBlock name="sale.reorder.sidebar" remove="true" />
+		<referenceBlock name="catalog.product.viewed" remove="true" />
+
+        <referenceContainer name="footer-container">
+            <referenceContainer name="footer">
+                <block class="Magento\Framework\View\Element\Template" name="custom-footer"
+                       template="Magento_Theme::html/custom-footer.phtml" before="footer_links"/>
+            </referenceContainer>
+        </referenceContainer>
+
+        <referenceBlock name="breeze.js">
+            <arguments>
+                <argument name="bundles" xsi:type="array">
+                    <item name="default" xsi:type="array">
+                        <item name="items" xsi:type="array">
+                            <item name="footer-js" xsi:type="string">Magento_Theme/js/custom-footer</item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="header.panel.wrapper">
+            <container name="header-wrapper-content" label="Page Header" htmlTag="div" htmlClass="header-content-s">
+                <container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div"
+                           htmlClass="header content">
+                </container>
+            </container>
+        </referenceContainer>
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template" name="mdd-navigation.sections" before="-"
+                   template="Magento_Theme::html/sections.phtml">
+                <arguments>
+                    <argument name="group_name" xsi:type="string">mdd-navigation-section</argument>
+                    <argument name="group_css" xsi:type="string">mdd-nav-section</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="footer_links" remove="true"/>
+    </body>
+</page>

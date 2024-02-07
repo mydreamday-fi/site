@@ -1,0 +1,288 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* @var \Magento\Sales\Block\Adminhtml\Order\Invoice\View\Items $block */
+?>
+<audio id="go_new" src="<?php echo $this->getViewFileUrl('Mydreamday_PickChecker::audio/go-new.mp3'); ?>" muted></audio>
+<div class="admin__table-wrapper">
+    <table class="data-table admin__table-primary order-invoice-tables">
+        <thead>
+            <tr class="headings">
+                <th class="col-product"><span><?= $block->escapeHtml(__('Product')) ?></span>
+                </th>
+                <th class="col-price"><span><?= $block->escapeHtml(__('Price')) ?></span>
+                </th>
+                <th class="col-qty"><span><?= $block->escapeHtml(__('Qty')) ?></span>
+                </th>
+                <th class="col-subtotal"><span><?= $block->escapeHtml(__('Scanned in order')) ?></span>
+                </th>
+                <th class="col-subtotal"><span><?= $block->escapeHtml(__('Qty scanned')) ?></span>
+                </th>
+                <th class="col-subtotal"><span><?= $block->escapeHtml(__('Approve row')) ?></span>
+                </th>
+            </tr>
+        </thead>
+        <?php $_items = $block->getInvoice()->getAllItems() ?>
+        <?php $i = 0; foreach ($_items as $_item) : ?>
+        <?php if ($_item->getOrderItem()->getParentItem()) :
+                continue;
+            else :
+                $i++;
+            endif; ?>
+        <tbody
+            class="<?= /* @noEscape */ $i%2 ? 'even' : 'odd' ?>">
+            <?= $block->getItemHtml($_item) ?>
+            <?= $block->getItemExtraInfoHtml($_item->getOrderItem()) ?>
+        </tbody>
+        <?php endforeach; ?>
+    </table>
+    <!--<button class="btn-done primary" disabled>PICKING DONE</button>-->
+    <audio id="notification" src="<?php echo $this->getViewFileUrl('Mydreamday_PickChecker::audio/pick-success.mp3'); ?>" muted></audio>
+</div>
+<div id="modal-picking" style="display: none">
+    <div class="modal-body-content">
+        <img src="/media/icon/fail.png" />
+        <p><?= $block->escapeHtml(__('There are still unscanned items in this order, are you sure you want to continue?')) ?>
+        </p>
+        <div class="btn-wrap">
+            <button class="btn secondary done">I'm done</button>
+            <button class="btn primary continue">Continue picking</button>
+        </div>
+    </div>
+</div>
+<div id="modal-picking-done" style="display: none">
+    <div class="modal-body-content">
+        <img src="/media/icon/picking-done.jpg" style="max-width: 130px" />
+        <p style="font-weight: 600; margin-top: 20px"><?= $block->escapeHtml(__('Great, everything is picked!')) ?>
+        </p>
+    </div>
+</div>
+<style>
+    .btn-done {
+        margin: auto;
+        display: block !important;
+        min-width: 400px;
+        font-size: 2em !important;
+        margin-top: 50px;
+    }
+
+    .modal-picking {
+        z-index: 902;
+        max-width: 600px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        top: 80%;
+        height: 100%;
+    }
+
+    .modal-picking .modal-header {
+        display: none;
+    }
+
+    .modal-body-content {
+        text-align: center;
+        padding-top: 30px;
+    }
+
+    .modal-body-content>p {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+
+    .modal-body-content .btn-wrap>button {
+        padding: 10px;
+        font-size: 18px;
+        min-width: 150px;
+    }
+
+    .modal-body-content .btn-wrap>button:first-child {
+        margin-right: 20px;
+    }
+</style>
+<script>
+    require(['jquery', 'Mydreamday_PickChecker/js/onscan', "Magento_Ui/js/modal/modal", 'loader'], function($, onScan,
+        modal) {
+
+        
+        //modal
+        var options = {
+            type: 'popup',
+            responsive: true,
+            buttons: [],
+            modalClass: 'modal-picking'
+        };
+
+        modal(options, $('#modal-picking-done'));
+
+        modal(options, $('#modal-picking'));
+        $(".btn-done").click(function() {
+            if ($('[data-picked="0"]').length) {
+                $('#modal-picking').modal('openModal');
+            } else {
+                window.location.href =
+                    '<?= $block->getUrl('pickchecker/scaninvoice/index') ?>';
+            }
+        });
+
+        $('button.done').click(function() {
+            window.location.href =
+                '<?= $block->getUrl('pickchecker/scaninvoice/index') ?>';
+        });
+
+        $('button.continue').click(function() {
+            $('#modal-picking').modal('closeModal');
+        });
+        $('.col-approve-row .approve-row').click(function(){
+            $this = $(this);
+            console.log($this.parents('tr').find('.col-status').attr('data-picked'));
+             if($this.parents('tr').find('.col-status').attr('data-picked') == 0) {
+                var quantity = parseFloat($this.parents('tr').attr('data-qty'));
+                var scaned_qty = parseFloat($this.parents('tr').attr('data-scaned-qty'));
+                if (quantity == 1) {
+                    $this.parents('tr').find('.col-status').attr('data-picked', 1);
+                    $this.parents('tr').find('.col-status').find('img').attr('src', '/media/icon/success.png');
+                    $this.parents('tr').find('.col-approve-row .approve-row').css('display','none');
+                    $this.parents('tr').find('.col-qty-scaned').attr('data-qty-s',scaned_qty++);
+                    $this.parents('tr').find('.col-qty-scaned').text(scaned_qty++);
+                } 
+                else {
+                    // // scaned_qty++;
+                    // scaned_qty = quantity;
+                    // $this.parents('tr').attr('data-scaned-qty', scaned_qty);
+                    // // if (scaned_qty ==  quantity) {
+                    //     $this.parents('tr').find('.col-status').attr('data-picked', scaned_qty);
+                    //     $this.parents('tr').find('.col-status').find('img').attr('src',
+                    //         '/media/icon/success.png');
+                    //     $this.parents('tr').find('.col-approve-row .approve-row').css('display','none');
+                    //     $this.parents('tr').find('.col-qty-scaned').attr('data-qty-s',scaned_qty);
+                    //     $this.parents('tr').find('.col-qty-scaned').text(scaned_qty);
+                    // // }
+
+                    scaned_qty++;
+                        $this.parents('tr').attr('data-scaned-qty', scaned_qty);
+                        $this.parents('tr').find('.col-qty-scaned').attr('data-qty-s',scaned_qty);
+                        $this.parents('tr').find('.col-qty-scaned').text(scaned_qty);
+                        if (scaned_qty == quantity) {
+                            $this.parents('tr').find('.col-status').attr('data-picked', 1);
+                            $this.parents('tr').find('.col-status').find('img').attr('src',
+                                '/media/icon/success.png');
+                            $this.parents('tr').find('.col-approve-row .approve-row').css('display','none');
+                            $this.parents('tr').find('.col-qty-scaned').attr('data-qty-s',scaned_qty);
+                            $this.parents('tr').find('.col-qty-scaned').text(scaned_qty);
+                        }
+                }
+				
+				if (!$('[data-picked="0"]').length) {
+					$('#modal-picking-done').modal('openModal');
+					document.getElementById('notification').muted = false;
+					document.getElementById('notification').play();
+					setTimeout(function() {
+						window.location.href =
+							'<?= $block->getUrl('pickchecker/scaninvoice/index') ?>';
+					}, 5000);
+				}
+            }
+
+        });
+        
+		
+		
+        var options = {};
+        var body = $('body').loader();
+        
+        body.loader('show');
+        setTimeout(function() {
+            options.onScan = function(barcode, qty) {
+                if (!barcode) {
+                    alert('Can not scan barcode');
+                    return false;
+                }
+                var el = $('tr.id-' + barcode);
+                console.log(barcode)
+                console.log(qty)
+                if (!el.length) {
+                    var audio = new Audio('/media/sound/pick-fail.ogg');
+                    audio.play();
+                    audio.addEventListener("ended", function(){
+                        audio.currentTime = 0;
+                        alert(barcode + ' not found');
+                    });
+                    return false;
+                }
+                
+                if (el.find('.col-status').attr('data-picked') == 0) {
+                    var quantity = parseFloat(el.attr('data-qty'));
+                    var scaned_qty = parseFloat(el.attr('data-scaned-qty'));
+
+                    if (quantity == 1) {
+                        el.find('.col-status').attr('data-picked', 1);
+                        el.find('.col-status').find('img').attr('src', '/media/icon/success.png');
+                        el.find('.col-approve-row .approve-row').css('display','none');
+                        el.find('.col-qty-scaned').attr('data-qty-s',scaned_qty++);
+                        el.find('.col-qty-scaned').text(scaned_qty++);
+                    } else {
+                        scaned_qty++;
+                        el.attr('data-scaned-qty', scaned_qty);
+                        el.find('.col-qty-scaned').attr('data-qty-s',scaned_qty);
+                        el.find('.col-qty-scaned').text(scaned_qty);
+                        if (scaned_qty == quantity) {
+                            el.find('.col-status').attr('data-picked', 1);
+                            el.find('.col-status').find('img').attr('src',
+                                '/media/icon/success.png');
+                            el.find('.col-approve-row .approve-row').css('display','none');
+                            el.find('.col-qty-scaned').attr('data-qty-s',scaned_qty);
+                            el.find('.col-qty-scaned').text(scaned_qty);
+                        }
+                    }
+                    var audio = new Audio('/media/sound/pick-success.ogg');
+                    audio.play();
+                    if (!$('[data-picked="0"]').length) {
+                        $('#modal-picking-done').modal('openModal');
+                        document.getElementById('notification').muted = false;
+                        document.getElementById('notification').play();
+                        setTimeout(function() {
+                            window.location.href =
+                                '<?= $block->getUrl('pickchecker/scaninvoice/index') ?>';
+                        }, 5000);
+                    }
+                } else {
+                    // if (!$('[data-picked="0"]').length) {
+                    //     $('#modal-picking-done').modal('openModal');
+                    //     setTimeout(function() {
+                    //         window.location.href =
+                    //             '<?= $block->getUrl('pickchecker/scaninvoice/index') ?>';
+                    //     }, 5000);
+                    // }
+                    var audio = new Audio('/media/sound/pick-fail.ogg');
+                    audio.play();
+                    audio.addEventListener("ended", function(){
+                        audio.currentTime = 0;
+                        alert('Too many products picked!');
+                    });
+                    return false;
+                }
+
+            };
+            onScan.attachTo(document, options);
+            $('.btn-done').removeAttr('disabled');
+            $('body').trigger('processStop');
+            document.getElementById('go_new').muted = false;
+            document.getElementById('go_new').play();
+        }, 3000);
+
+
+    })
+</script>
+<style>
+    .approve-row{
+        padding: 10px 15px;
+        border: 1px solid red;
+        background: antiquewhite;
+    }
+    .approve-row:hover,.approve-row:active,.approve-row:focus{
+        background: antiquewhite;
+    }
+</style>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright © TRIC Solutions. All rights reserved.
+ * @license   https://www.tric.dk/TRIC-LICENSE-COMMUNITY.txt
+ * @link      https://www.tric.dk
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <postnord>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>David\PostNord\Model\Carrier\Postnord</model>
+                <name>Postnord MyPack Collect</name>
+                <handling_type>F</handling_type>
+                <price>0</price>
+                <title>Postnord MyPack Collect</title>
+                <type>I</type>
+                <specificerrmsg>This shipping method is not available right now.</specificerrmsg>
+            </postnord>
+            <postnord_homedelivery>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>David\PostNord\Model\Carrier\PostnordHomeDelivery</model>
+                <name>Postnord Home Delivery</name>
+                <handling_type>F</handling_type>
+                <price>0</price>
+                <title>Postnord Home Delivery</title>
+                <type>I</type>
+                <specificerrmsg>This shipping method is not available right now.</specificerrmsg>
+            </postnord_homedelivery>
+        </carriers>
+    </default>
+</config>

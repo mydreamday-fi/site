@@ -1,0 +1,72 @@
+<?php
+/**
+ * Category layered navigation
+ *
+ * @var $block \Magento\LayeredNavigation\Block\Navigation
+ */
+?>
+
+<?php if (!$block->canShowBlock()) : return; endif; ?>
+
+<?php
+    $visibleFilters = array_filter($block->getFilters(), function ($filter) {
+        return $filter->getItemsCount() > 0;
+    });
+    $activeFilters = $block->getLayer()->getState()->getFilters();
+
+    $isExpanded = $block->getExpanded();
+    if ($isExpanded === 'auto') {
+        $isExpanded = count($visibleFilters) <= 7;
+    }
+
+    $name = $block->getNameInLayout();
+    $parentName = $this->getLayout()->getParentName($name);
+    if (strpos($parentName, 'sidebar') === false) {
+        $isExpanded = false;
+    }
+?>
+
+<div class="block filter">
+    <div class="block-title filter-title" tabindex="0">
+        <strong><?= $block->escapeHtml(__('Shop By')) ?></strong>
+        <?php if ($activeFilters) : ?>
+            <span class="count"><?= count($activeFilters) ?></span>
+        <?php endif; ?>
+    </div>
+
+    <div class="block-content filter-content">
+        <?= $block->getChildHtml('state') ?>
+
+        <?php if ($activeFilters) : ?>
+            <div class="block-actions filter-actions">
+                <a href="<?= $block->escapeUrl($block->getClearUrl()) ?>" class="action clear filter-clear"><span><?= $block->escapeHtml(__('Clear All')) ?></span></a>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($visibleFilters) : ?>
+            <strong role="heading" aria-level="2" class="block-subtitle filter-subtitle"><span><?= $block->escapeHtml(__('Shopping Options')) ?></span></strong>
+            <div class="filter-options" id="narrow-by-list">
+        <?php endif ?>
+
+        <?php foreach ($visibleFilters as $i => $filter) : ?>
+            <div class="filter-options-item filter-<?= $filter->getRequestVar() ?><?= $isExpanded ? ' initially-active active' : '' ?>"
+                data-mage-init='{"collapsible":{"active":<?= $isExpanded ? 'true' : 'false' ?>,"dialog":true}}'>
+                <div role="heading" aria-level="2" class="filter-options-title" data-trigger="true" data-role="title"><?= $block->escapeHtml(__($filter->getName())) ?></div>
+                <div class="filter-options-content" data-role="content"><?= /* @noEscape */ $block->getChildBlock('renderer')->render($filter) ?></div>
+            </div>
+        <?php endforeach; ?>
+
+        <?php if ($visibleFilters) : ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        ".block.filter, .block-title.filter-title": {
+            "Magento_LayeredNavigation/js/view": {
+
+            }
+        }
+    }
+</script>

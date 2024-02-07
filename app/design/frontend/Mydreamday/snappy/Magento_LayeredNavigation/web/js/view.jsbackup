@@ -1,0 +1,89 @@
+define(['jquery','drilldown'], function($,ctDrillDown){
+    window.addEventListener('scroll', function(){
+        var header = document.querySelector('.header-content-s');
+        header.classList.toggle("sticky", window.scrollY > 0);
+    });
+    if(window.matchMedia('(max-width: 767px)').matches){     
+        $(document).ready(function() {
+            var $breadcrumbs = $(".skin-classic-light.breadcrumbs");
+            var $drillDown = $("#drilldown");
+            var $current = $("#current");
+            var $back = $(".skin-classic-light.footer");
+            var $backb = $(".skin-classic-light.footer #back");
+            
+            $drillDown.ctDrillDown({
+                myClass: "ctDrillDown", // class given automatically to the element
+                expandableClass: "category-item", // Non ajax mode: this class will be given to "li" with children. Ajax mode: give this class to "li" that has children.
+                onOpened: $.noop, // Callback fired just after submenu was opened (element passed as an argument)
+                onBeforeOpen: $.noop, // Callback fired just before submenu opening (element passed as an argument)
+                onClosed: $.noop, // Callback fired just after submenu was closed (closed element passed as an argument)
+                onBeforeClose: $.noop, // Callback fired just before submenu is closed (closing element passed as an argument)
+                duration: 150, // Opening/closing animation time
+                easing: "linear", // Type of easing (see jquery ui docs for more)
+                currentClass: "current", // Menu will automatically open on the element having this class on load (think of stateful menu)
+                heightAutoAdjust: false, // If true, plugin will update the height of container automatically based on content
+                startName: "", // name of first breadcrumb
+                ajax: false, // set true to enable ajax mode
+                event: "click", // event on which to open submenu
+                keyboardNavigation: false, // is keyboard navigation active
+                activeClass: "active" // currently active position, i.e. selected on keyboard
+            });
+            
+            $back.click(function() {
+                $drillDown.ctDrillDown("goUp", 1);
+                console.log('test');
+                 manageBreadcrumbs();
+                return false;
+            });
+           
+            $(document).on('click','.nav-toggle',function (){
+           
+                $("#drilldown ul.submenu").removeClass("ui-menu");
+            });
+            manageBreadcrumbs();
+
+               
+            function manageBreadcrumbs() {
+                var breadcrumbs = $drillDown.ctDrillDown("getBreadcrumbs");
+             
+                if(breadcrumbs.length < 2) {
+                    $backb.fadeOut();
+                } else {
+                    $backb.fadeIn();
+                }
+               
+                var current = breadcrumbs.pop();
+                $current.html(current.text());
+            }
+            
+            $(document).on('click','.cms-header-menu .my-account > a',function (){
+                if ($(this).next().is(':visible')) {
+                    $(this).children().removeClass('active');
+                    $(this).next().hide();
+                }
+                else {
+                    $(this).children().addClass('active');
+                    $(this).next().show();
+                }   
+            });
+        });
+    }
+
+    $.widget('layerednavigation.view', {
+        _create: function(){
+            console.log('create')
+            $(document).on('click', '.sidebar.sidebar-main .block-title.filter-title', function(){
+                $('.sidebar.sidebar-main .block.filter').addClass('active');
+                if($('.button-close.filter-content-close').length == 0){
+                    var btnClose = $('<button>').addClass('button-close filter-content-close');
+                    $('.filter-content').prepend(btnClose);
+                }
+                
+            });
+            $(document).on('click', '.button-close.filter-content-close', function(){
+                $('.sidebar.sidebar-main .block.filter').removeClass('active');
+            })
+        }
+    });
+    return $.layerednavigation.view;
+})

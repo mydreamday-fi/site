@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\InventorySales\Model\IsProductSalableForRequestedQtyCondition\IsSalableWithReservationsCondition">
+        <plugin name="IsSalableWithReservationsCondition_Around_Plugin" type="David\Custom\Plugin\Model\IsProductSalableForRequestedQtyCondition\IsSalableWithReservationsCondition" sortOrder="0"/>
+    </type>
+	<type name="Swissup\Breeze\Helper\Data">
+        <plugin name="Breeze_Helper_plugin" type="David\Custom\Plugin\Breeze\Helper\Data" sortOrder="0"/>
+    </type>
+
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="custom-phone-validation" type="David\Custom\Plugin\Block\Checkout\LayoutProcessor"/>
+    </type>
+</config>

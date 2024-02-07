@@ -1,0 +1,65 @@
+<?php
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+    $context = $objectManager->get('Magento\Framework\App\Http\Context');
+    $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
+?>
+<div class="cms-header-menu">
+    <div class="my-account">
+        <a href="#">
+        	<span class="ui-menu-icon ui-icon"><svg class="SVGInline-svg css-rhceb6-StyledSvgInline-svg e1tieqmd1-svg" viewBox="0 0 12 22" xmlns="http://www.w3.org/2000/svg"><path d="M12 11.005a.997.997 0 0 0-.293-.707L1.707.293A.999.999 0 1 0 .293 1.707l9.293 9.298-9.282 9.288a.999.999 0 1 0 1.414 1.414l9.99-9.995a.997.997 0 0 0 .292-.707" fill-rule="evenodd"></path></svg></span>
+        	<span><?= __("My Account")?></span>
+        </a>
+        <?php if(!$isLoggedIn): ?>
+        <ul class="my-account-ex" style="display: none;">
+            <li class="my-account-ex-item">
+                <a href="/customer/account/login/">
+                    <span><?= __("Login")?></span>
+                </a>
+            </li>
+            <li class="my-account-ex-item">
+                <a href="/customer/account/create/">
+                    <span><?= __("Create Account")?></span>
+                </a>
+            </li>
+        </ul>   
+        <?php else: ?>
+        <ul class="my-account-ex" style="display: none;">
+            <li class="my-account-ex-item">
+                <a href="/customer/account/">
+                    <span><?= __("My Profile")?></span>
+                </a>
+            </li>
+            <li class="my-account-ex-item">
+                <a href="/customer/account/logout/">
+                    <span><?= __("Logout")?></span>
+                </a>
+            </li>
+        </ul>
+         
+        <?php endif; ?>
+    </div>
+    <?php
+    echo $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('custom_link_header_menu')
+    ->toHtml();
+    ?>
+    
+</div>
+<style type="text/css">
+    .my-account .my-account-ex-item a{
+        padding: 5px 25px 5px !important;
+    }
+    .cms-header-menu .ui-icon{
+        margin-top: 0.25rem;
+        width: 0.5rem;
+        fill: #fff;
+		float: right;
+    }
+    .cms-header-menu .ui-icon.active{
+        transform: rotate(90deg);
+        right: 14px;
+        top: 25px;
+    }
+</style>

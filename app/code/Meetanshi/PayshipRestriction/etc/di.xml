@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin name="shipping_rates" type="Meetanshi\PayshipRestriction\Plugin\ShippingRates" />
+    </type>
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="payment_methods" type="Meetanshi\PayshipRestriction\Plugin\MethodList" />
+    </type>
+    <type name="Magento\Payment\Block\Form\Container">
+        <plugin name="method_list" type="Meetanshi\PayshipRestriction\Plugin\Methods" />
+    </type>
+    <type name="Magento\Paypal\Model\AbstractConfig">
+        <plugin name="abstract_config" type="Meetanshi\PayshipRestriction\Plugin\MethodActive" />
+    </type>
+    <preference for="Meetanshi\PayshipRestriction\Api\CustomerGroupInterface" type="Meetanshi\PayshipRestriction\Model\Api\CustomerGroup"/>
+</config>

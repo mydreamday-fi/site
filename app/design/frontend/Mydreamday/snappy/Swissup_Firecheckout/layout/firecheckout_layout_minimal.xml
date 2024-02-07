@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="firecheckout_empty"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="firecheckout-layout-minimal"/>
+        <referenceContainer name="checkout.header.container" remove="true"/>
+        <move element="logo" destination="firecheckout.header.wrapper"/>
+        <referenceBlock name="copyright" remove="true"/>
+    </body>
+</page>

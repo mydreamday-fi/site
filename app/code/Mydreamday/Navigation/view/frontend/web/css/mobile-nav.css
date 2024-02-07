@@ -1,0 +1,456 @@
+@media screen and (max-width: 640px) {
+    body .cookie-bar.shown ~ .cookie-wall {
+        pointer-events: none;
+    }
+
+    .cookie-bar .cookie-bar-buttons button {
+        pointer-events: all;
+    }
+
+    .cookie-bar .cookie-bar-buttons {
+        pointer-events: all;
+    }
+
+    /* Slideout container */
+    #mobile-menu-container {
+        display: none;
+    }
+
+    .slideout-open #mobile-menu-container {
+        display: block;
+        height: 100dvh;
+        width: calc(100vw - 64px);
+        overflow: hidden;
+    }
+
+    .page-wrapper:before {
+        content: '';
+        display: block;
+        background-color: rgba(0, 0, 0, 0);
+        transition: background-color 0.5s ease-in-out;
+    }
+
+    .page-wrapper.panel-open:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        z-index: 101;
+    }
+
+    .page-wrapper.panel-closing:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.0);
+        z-index: 101;
+    }
+
+    .slideout-close {
+        visibility: hidden;
+        height: 0;
+        transition: top, left 5s ease-in-out;
+    }
+
+    .slideout-close input {
+        display: block;
+        width: 40px;
+        height: 32px;
+        position: absolute;
+        top: -7px;
+        left: -5px;
+        cursor: pointer;
+        opacity: 0;
+        z-index: 2;
+        -webkit-touch-callout: none;
+    }
+
+    /*
+     * Just a quick hamburger
+     */
+    .slideout-close span {
+        display: block;
+        width: 16px;
+        height: 2px;
+        margin-bottom: 4px;
+        background: #4B5563;
+        border-radius: 3px;
+        transition: transform 0.8s;
+    }
+
+    /*
+     * Transform all the slices of hamburger
+     * into a crossmark.
+     */
+    .panel-open:not(.panel-closing) .slideout-close span:nth-child(1) {
+        transform: translate(0px, 7px) rotate(45deg);
+    }
+
+    .panel-open:not(.panel-closing) .slideout-close span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .panel-open:not(.panel-closing) .slideout-close span:nth-child(3) {
+        transform: translate(0px, -5px) rotate(-45deg);
+    }
+
+    .panel-open .slideout-close,
+    .panel-closing .slideout-close {
+        visibility: visible;
+        height: auto;
+        position: fixed;
+        top: 10px;
+        left: 7px;
+        background: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        z-index: 500;
+        padding: 10px 10px 8px;
+    }
+
+    .page-wrapper .nav-toggle {
+        padding-left: 3px;
+    }
+
+    /* Hide defailt backdrop and the button */
+    .nav-open .nav-toggle::before {
+        display: none;
+    }
+
+    .nav-open .nav-toggle span::after {
+        display: none;
+    }
+
+    /* Header */
+    .mobile-menu-header {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+        border-bottom: 1px;
+        border-color: #eee;
+        border-style: solid;
+    }
+
+    .mobile-menu-header-links {
+        color: #595959;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .go-back-button {
+        background: white;
+        margin-left: -16px;
+        padding-right: 0;
+    }
+
+    .mobile-menu-header-back-caret {
+        width: 12px;
+        transform: rotateZ(-180deg);
+        color: #9FA3A8;
+    }
+
+    .mobile-menu-header-dropdown-caret {
+        width: 9px;
+        transform: rotateZ(90deg);
+        color: #9FA3A8;
+        transition: transform 0.5s ease;
+    }
+
+    .activated .mobile-menu-header-dropdown-caret {
+        transform: rotateZ(-90deg);
+    }
+
+    .mobile-menu-header-links a {
+        background-color: #f5f5f5;
+        margin-bottom: 1px;
+        height: 48px;
+        padding: 10px 10px 10px 20px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mobile-menu-header-links a:last-child {
+        margin-bottom: 0;
+    }
+
+    .mobile-menu-header-links a img {
+        color: #767676;
+    }
+
+    .mobile-menu-header-items {
+        background: white;
+        min-height: 64px;
+        padding: 5px 16px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .mobile-menu-header-items-first {
+        display: flex;
+    }
+
+    .mobile-menu-welcome {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        padding-left: 12px;
+        font-weight: 500;
+    }
+
+    .mobile-menu-welcome-user {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: white;
+        width: 100%;
+        font-size: 20px;
+        padding-left: 12px;
+        font-weight: 500;
+        padding-right: 0;
+    }
+
+    .mobile-menu-header {
+        height: 64px;
+    }
+
+    .mobile-menu-menu-title {
+        display: none;
+    }
+
+
+    /* Managing header content visibility START */
+    .go-back-button {
+        visibility: hidden;
+    }
+
+    .mobile-menu-hello,
+    .mobile-menu-welcome,
+    .mobile-menu-welcome-user {
+        visibility: visible;
+        display: flex;
+    }
+
+    .mobile-menu-header-category .go-back-button,
+    .mobile-menu-header-category .mobile-menu-menu-title {
+        visibility: visible;
+        display: flex;
+        overflow: hidden;
+        max-width: calc(100vw - 151px);
+    }
+
+    .mobile-menu-header-category .mobile-menu-welcome,
+    .mobile-menu-header-category .mobile-menu-hello,
+    .mobile-menu-header-category .mobile-menu-header-dropdown-caret {
+        display: none;
+    }
+
+    .mobile-menu-header-category .mobile-menu-welcome-user {
+        justify-content: flex-end;
+        width: 50px;
+    }
+
+    /* Managing header content visibility END */
+    .mobile-menu-header.activated {
+        height: 309px;
+    }
+
+    .mobile-menu-header.activated + .mm-spn {
+        height: calc(100dvh - 471px);
+    }
+
+    .mobile-menu-header .mobile-menu-header-links {
+        animation: fade_out_hide 0.5s linear;
+        margin-bottom: -100%;
+    }
+
+    .mobile-menu-header.activated .mobile-menu-header-links {
+        display: flex;
+        animation: fade_in_show 0.5s linear;
+        height: 309px;
+    }
+
+    @keyframes fade_in_show {
+        0% {
+            transform: translateY(-100%);
+            margin-bottom: -100%;
+        }
+        100% {
+            transform: translateY(0);
+            margin-bottom: 0;
+        }
+    }
+
+    @keyframes fade_out_hide {
+        0% {
+            transform: translateY(0);
+            margin-bottom: 0;
+        }
+        100% {
+            transform: translateY(-100%);
+            margin-bottom: -100%;
+        }
+    }
+
+    .mobile-menu-header.activated .mobile-menu-header-user-caret {
+        width: 9px;
+        transform: rotateZ(-90deg);
+        transition-duration: 0.3s;
+        transition-property: transform;
+        color: #9FA3A8;
+    }
+
+    .mobile-menu-menu-title {
+        padding-left: 10px;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .mobile-menu-login {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 300;
+        padding-left: 20px;
+    }
+
+    /* Menu (mmenu-light) with drilldown items */
+    .mobile-menu-level-top > span {
+        padding: calc((var(--mm-spn-item-height) - var(--mm-spn-line-height)) / 2) 0;
+    }
+
+    #mobile-menu-container .mm-spn.mm-spn--light {
+        --mm-spn-panel-offset: 100%;
+        --mm-spn-item-indent: 0px;
+        --mm-spn-line-height: 45px;
+        background: white;
+    }
+
+    .mm-spn ul:after {
+        content: none;
+        display: none;
+    }
+
+    /* Remove some empty space from mmenu-light */
+    .mm-spn.mm-spn--navbar.mm-spn--main::after {
+        display: none;
+    }
+
+    /* Remove default go back and title functionality */
+    .mm-spn.mm-spn--navbar::after,
+    .mm-spn.mm-spn--navbar::before {
+        display: none !important;
+    }
+
+    /* Remove default go back and title padding */
+    .mm-spn.mm-spn--navbar ul {
+        top: 0 !important;
+        background: white;
+    }
+
+    .mm-spn span {
+        padding-left: 0;
+    }
+
+    .mm-spn a {
+        display: flex !important;
+    }
+
+    .mm-spn li {
+        padding-left: 20px !important;
+    }
+
+    .mm-spn li:empty {
+        display: none !important;
+    }
+
+    /* Menu items separator */
+    .mm-spn li:after {
+        border-color: #eee;
+        opacity: 1;
+    }
+
+    /* For active links - when you are already on the page */
+    .mm-spn li.active {
+        background: #f5f5f5;
+    }
+
+    /* Remove the border separator between link title and the caret */
+    .mm-spn li a:after {
+        content: none;
+    }
+
+    /* Drilldown menu styles configuration */
+    /* Hide a caret for items that do not require a drilldown */
+    .category-item:not(.parent)::before {
+        display: none;
+    }
+
+    .category-item:not(.parent):active {
+        background: #eee;
+    }
+
+    .mobile-menu-container .mm-spn {
+        height: calc(100dvh - 226px);
+    }
+
+    .mm-spn li::after {
+        display: block;
+    }
+
+    .mm-spn a:not(:last-child) {
+        width: calc(100% - 80px) !important;
+    }
+
+    /* Hide the border to the left of the caret for drilldown items */
+    .mm-spn a:not(:last-child):after {
+        visibility: hidden;
+    }
+
+    .nav-open .nav-toggle span::after {
+        left: 20px;
+    }
+
+    /* Footer */
+    .mobile-menu-customer-service {
+        color: white;
+        background-color: #414346;
+        display: block;
+        padding: 12px 16px 10px;
+    }
+
+    .mobile-menu-customer-service-icon {
+        margin-right: 8px;
+        width: 29px;
+        position: relative;
+        bottom: 1px;
+        fill: white;
+        color: white;
+    }
+
+    .mobile-menu-additional-links {
+        padding: 20px 20px 16px;
+        background-color: #2c2e32;
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-menu-additional-link {
+        padding-bottom: 4px;
+    }
+
+    .mobile-menu-additional-link .checkmark-icon {
+        width: 12px;
+        height: 12px;
+        padding-bottom: 2px;
+        margin-right: 8px;
+    }
+}

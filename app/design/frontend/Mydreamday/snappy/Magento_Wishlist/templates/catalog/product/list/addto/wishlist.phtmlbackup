@@ -1,0 +1,44 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var Magento\Wishlist\Block\Catalog\Product\ProductList\Item\AddTo\Wishlist $block */
+?>
+<?php
+$helper = $this->helper('Mydreamday\Wishlist\Helper\Data');
+$productId = $block->getProduct()->getId();
+$isInWishlist = $helper->isProductInWishlist($productId);
+$isLoggedIn = $helper->isLoggedIn();
+?>
+
+<?php if ($block->getWishlistHelper()->isAllow()) : ?>
+    <?php $iconClass = $isInWishlist ? 'in-wishlist' : ''; ?>
+    <a href="#"
+       class="action towishlist <?= $iconClass ?>"
+	   data-loggedin="<?= $isLoggedIn ? 'true' : 'false' ?>"
+       title="<?= $isInWishlist ? $block->escapeHtmlAttr(__('Added to Wish List')) : $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+       aria-label="<?= $isInWishlist ? $block->escapeHtmlAttr(__('Added to Wish List')) : $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+       data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($block->getProduct()) ?>'
+       data-action="add-to-wishlist"
+       role="button">
+        <span><?= $isInWishlist ? $block->escapeHtml(__('Added to Wish List')) : $block->escapeHtml(__('Add to Wish List')) ?></span>
+    </a>
+<?php endif; ?>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            $('.action.towishlist').on('click', function () {
+                if ($(this).data('loggedin') === 'true') {
+                    $(this).addClass('in-wishlist');
+                    $(this).find('span').text('<?= $block->escapeJs(__('Added to Wish List')) ?>');
+                } else {
+                    // Handle the case where the user is not logged in
+                }
+            });
+        });
+    });
+</script>
+

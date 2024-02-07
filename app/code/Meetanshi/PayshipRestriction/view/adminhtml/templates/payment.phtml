@@ -1,0 +1,77 @@
+<div class="entry-edit scope">
+    <div class="entry-edit">
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend"><?php echo __('Current Scope'); ?></h4>
+        </div>
+        <div id="base_fieldset1" class="fieldset">
+            <div class="hor-scroll">
+                <?php $_websites = $block->getWebsites(); ?>
+                <label>
+                    <select onchange="location.href=this.options[this.selectedIndex].getAttribute('url')"
+                            class="system-config-store-switcher" id="website_switcher">
+                        <?php foreach ($_websites as $_website): ?>
+                            <option value="<?php echo $_website->getCode(); ?>"
+                                    url="<?php echo $block->getWebsiteUrl($_website); ?>" <?php if ($block->getCurrentWebsite() == $_website->getId()) {
+                                        echo 'selected="selected"';
+                                         } ?>><?php echo $_website->getName(); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<?php $params = []; ?>
+<form method="post" action="<?php echo $block->getSaveUrl(); ?>" id="edit_form" enctype="multipart/form-data">
+    <input type="hidden" value="<?php echo $block->getFormKey(); ?>" name="form_key">
+    <?php $_methods = $block->getMethods(); ?>
+    <?php $_groups = $block->getCustomerGroups(); ?>
+    <div class="page-main-actions">
+        <div class="page-actions-placeholder"></div>
+        <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+            <div class="page-actions-inner" data-title="Save">
+                <div class="page-actions-buttons">
+                    <button id="add" title="<?php echo __('Save') ?>"
+                            class="action-default scalable add primary add-template" type="submit">
+                        <span><?php echo __('Save') ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2><?php echo __('Select the customer groups for which the payment methods would be available.') ?></h2>
+    <div class="entry-edit content">
+        <div class="entry-edit">
+            <input type="hidden" name="type" value="payment"/>
+            <div id="base_fieldset" class="fieldset">
+                <div class="hor-scroll">
+                    <table cellspacing="0" class="form-list">
+                        <tbody>
+                        <?php foreach ($_methods as $_methodCode => $_method): ?>
+                            <?php if (isset($_method['title']) && $_method['title']): ?>
+                                <tr class="spacer"></tr>
+                                <tr>
+                                    <td class="label"><?php echo $_method['title']; ?></td>
+                                    <td class="value">
+                                        <input type="hidden" name="methods_codes[]"
+                                               value="<?php echo $_methodCode; ?>"/>
+                                        <select multiple="multiple" class="select multiselect"
+                                                name="methods[<?php echo $_methodCode; ?>][]">
+                                            <?php foreach ($_groups as $_group): ?>
+                                                <option <?php if ($block->isGroupSelected($_group, $_methodCode)) {
+                                                    echo 'selected="selected"';
+                                                        } ?> value="<?php echo $_group['value']; ?>"><?php echo $_group['label']; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="spacer"></tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

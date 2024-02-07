@@ -1,0 +1,21 @@
+"Add New Field","Lisää uusi kenttä"
+"Save Field","Tallenna kenttä"
+"Delete Field","Poista kenttä"
+"Edit Field '%1'","Muokkaa kenttä %1"
+"New Field","Uusi kenttä"
+"Advanced Field Properties","Avancerade fältegenskaper"
+"Use values greater than 1","Använd värden större än 1"
+"Field Properties",Fältegenskaper
+"Field Information",Fältinformation
+"Checkout field was deleted.","Kassakenttä poistettiin."
+"Can't find a field to delete.","Poistettava kenttä ei löydy."
+"Edit Field","Muokkaa kenttä"
+"This field no longer exists.","Det här fältet finns inte längre."
+"Manage Fields","Hantera fält"
+"You saved the checkout field.","Du sparat kassafältet."
+"An field with this code already exists.","Ett fält med den här koden finns redan."
+"An field with the same code (%1) already exists.","Ett fält med samma kod (%1) finns redan."
+"Please fill all required fields before placing the order.","Vänligen fyll i alla obligatoriska fält innan du beställer."
+"Additional Information","ytterligare information"
+"No additional information found.","Ingen ytterligare information hittades."
+"Field Code",Fältkod

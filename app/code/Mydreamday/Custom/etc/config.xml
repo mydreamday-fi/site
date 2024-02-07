@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <pktkppickuppoint>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Pakettikauppa\Logistics\Model\Carrier\Pickuppoint</model>
+                <name>Pakettikauppa Shipping</name>
+                <price>10.00</price>
+                <title>Pickuppoint</title>
+                <type>I</type>
+                <sort_order>0</sort_order>
+                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+            </pktkppickuppoint>
+            <pktkphomedelivery>
+                <active>1</active>
+                <sallowspecific>0</sallowspecific>
+                <model>Pakettikauppa\Logistics\Model\Carrier\Homedelivery</model>
+                <name>Pakettikauppa Shipping</name>
+                <price>10.00</price>
+                <title>Home Delivery</title>
+                <type>I</type>
+                <sort_order>1</sort_order>
+                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+            </pktkphomedelivery>
+        </carriers>
+    </default>
+</config>

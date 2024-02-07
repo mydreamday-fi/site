@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category  BSS
+ * @package   Bss_CustomShippingMethod
+ * @author    Extension Team
+ * @copyright Copyright (c) 2018-2019 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license   http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="bss_custom_shipping_method_save_after">
+        <observer name="bss_custom_shipping_save_after" instance="Bss\CustomShippingMethod\Observer\SaveAfter"/>
+    </event>
+    <event name="bss_custom_shipping_method_load_after">
+        <observer name="bss_custom_shipping_after_load" instance="Bss\CustomShippingMethod\Observer\LoadAfter"/>
+    </event>
+</config>

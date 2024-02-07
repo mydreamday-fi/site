@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_CustomShippingMethod
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2021 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="BssCustomShippingGirdFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="BssCustomShippingGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Bss\CustomShippingMethod\Model\ResourceModel\Comment\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">BssCustomShippingGirdFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Bss\CustomShippingMethod\Model\ResourceModel\CustomMethod\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bss_custom_shipping_method</argument>
+            <argument name="eventPrefix" xsi:type="string">bss_customshipping_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">customshipping_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Bss\CustomShippingMethod\Model\ResourceModel\CustomMethod</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="grid_custom_method_shipping_list_data_source" xsi:type="string">Bss\CustomShippingMethod\Model\ResourceModel\CustomMethod\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Bss\CustomShippingMethod\Api\ManagementInterface" type="Bss\CustomShippingMethod\Model\Management" />
+    <preference for="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" type="Bss\CustomShippingMethod\Model\ResourceModel\CustomMethodRepository" />
+    <preference for="Bss\CustomShippingMethod\Api\Data\CustomMethodInterface" type="Bss\CustomShippingMethod\Model\CustomMethod" />
+    <preference for="Bss\CustomShippingMethod\Api\Data\CustomMethodStoreInterface" type="Bss\CustomShippingMethod\Model\CustomMethodStore" />
+</config>

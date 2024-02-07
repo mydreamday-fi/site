@@ -1,0 +1,68 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Checkout\Block\Onepage */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+$description_postnord_packcollect = $this->helper('David\PostNord\Helper\Data')->getDesOfPostnordPackCollect();
+$icon_postnord_packcollect = $this->helper('David\PostNord\Helper\Data')->getIconOfPostnordPackCollect();
+$description_postnord_homdelivery = $this->helper('David\PostNord\Helper\Data')->getDesOfPostnordHomDelivery();
+$icon_postnord_homdelivery = $this->helper('David\PostNord\Helper\Data')->getIconOfPostnordHomDelivery();
+
+$getPostiKotipaketti = $this->helper('David\PostNord\Helper\Data')->getPostiKotipaketti();
+$getPostiExpress = $this->helper('David\PostNord\Helper\Data')->getPostiExpress();
+$getPostiPickPoint = $this->helper('David\PostNord\Helper\Data')->getPostiPickPoint();
+
+$getPostNordHomeDelivery = $this->helper('David\PostNord\Helper\Data')->getPostNordHomeDelivery();
+$getPostNord = $this->helper('David\PostNord\Helper\Data')->getPostNord();
+?>
+
+<div id="checkout" data-bind="scope:'checkout'" class="checkout-container">
+    <div id="checkout-loader" data-role="checkout-loader" class="loading-mask" data-mage-init='{"checkoutLoader": {}}'>
+        <div class="loader">
+            <img src="<?= $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')) ?>"
+                 alt="<?= $block->escapeHtmlAttr(__('Loading...')) ?>">
+        </div>
+    </div>
+    <?= /* @noEscape */ $secureRenderer->renderStyleAsTag("position: absolute;", "#checkout-loader img") ?>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+        {
+            "#checkout": {
+                "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+            }
+        }
+    </script>
+    <?php $serializedCheckoutConfig = /* @noEscape */ $block->getSerializedCheckoutConfig();
+    $scriptString = <<<script
+        window.checkoutConfig = {$serializedCheckoutConfig};
+        // Create aliases for customer.js model from customer module
+        window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
+        window.customerData = window.checkoutConfig.customerData;
+        window.description_postnord_packcollect = '{$description_postnord_packcollect}';
+        window.description_postnord_homdelivery = '{$description_postnord_homdelivery}';
+        window.icon_postnord_packcollect = '{$icon_postnord_packcollect}';
+        window.icon_postnord_homdelivery = '{$icon_postnord_homdelivery}';
+
+        window.getPostiKotipaketti = '{$getPostiKotipaketti}';
+        window.getPostiExpress = '{$getPostiExpress}';
+        window.getPostiPickPoint = '{$getPostiPickPoint}';
+         window.getPostNordHomeDelivery = '{$getPostNordHomeDelivery}';
+        window.getPostNord = '{$getPostNord}';
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+    <?php $scriptString = <<<script
+        require([
+            'mage/url',
+            'Magento_Ui/js/block-loader'
+        ], function(url, blockLoader) {
+            blockLoader("{$block->escapeJs($block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')))}");
+            return url.setBaseUrl('{$block->escapeJs($block->escapeUrl($block->getBaseUrl()))}');
+        })
+script;
+    ?>
+    <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+</div>

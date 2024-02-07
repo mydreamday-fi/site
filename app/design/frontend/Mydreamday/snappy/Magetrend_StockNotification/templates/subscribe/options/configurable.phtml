@@ -1,0 +1,37 @@
+<?php
+/**
+ * MB "Vienas bitas" (www.magetrend.com)
+ *
+ * @category Magetrend Extensions for Magento 2
+ * @package  Magetrend/StockNotification
+ * @author   E. Stulpinas <edwin@magetrend.com>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.magetrend.com/magento-2-out-of-stock-notification
+ */
+?>
+<?php $attributes = $block->getAvailableAttributes(); ?>
+<?php if (!empty($attributes)) : ?>
+    <?php $i = 0 ?>
+    <?php $columnCount = (count($attributes)%2 == 0)?'2':'1'; ?>
+    <div class="mtsn-options mtsn-options-column-<?php echo $columnCount ;?>">
+    <?php foreach ($attributes as $attribute) : ?>
+        <div class="mtsn-option-container mtsn-option-<?php echo (($i%2)==0)?'left':'right'?>">
+            <label for="mtsn_option_<?php echo $attribute['attribute_id'] ?>"><?php echo $attribute['label'] ?></label>
+            <select class="mtsn-configurable-option" name="super_attribute_<?php echo $attribute['attribute_id'] ?>"
+                    id="mtsn_option_<?php echo $attribute['attribute_id'] ?>">
+            <?php foreach ($attribute['values'] as $option) : ?>
+                <option value="<?php echo $option['value_index'] ?>"><?php echo $option['label'] ?></option>
+            <?php endforeach; ?>
+            </select>
+        </div>
+        <?php $i++ ?>
+    <?php endforeach; ?>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "snOptionsConfigurable": <?php echo (string)$block->getConfigJson();?>
+            }
+        }
+    </script>
+<?php endif; ?>

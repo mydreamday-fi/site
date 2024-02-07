@@ -1,0 +1,56 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php if ($_description = $block->getCurrentCategory()->getDescription()) :?>
+    <div class="category-description" id="more">
+                <div id="shadow"></div>
+        <?= /* @noEscape */ $this->helper(Magento\Catalog\Helper\Output::class)->categoryAttribute(
+            $block->getCurrentCategory(),
+            $_description,
+            'description'
+        ) ?>
+    </div>
+
+        <button id="myBtnReadMore" value="more-s">
+                <span class="transalte-cusmore"><?= __('Read more') ?></span>
+                <span class="transalte-cusless" style="display: none;"><?= __('Read less') ?></span>
+        </button>
+
+        <script>
+                require(['jquery'], function($){
+                        $('#myBtnReadMore').click(function(){
+                                $('#more').toggleClass('long');
+                                if ($(this).attr('value') == "more-s") {
+									var computedHeight = $('#more').prop('scrollHeight');
+									$('#more').css('max-height', $('#more').prop('scrollHeight') + 'px');
+									
+									$(this).find('.transalte-cusmore').hide();
+									$(this).find('.transalte-cusless').show();
+									$(this).attr('value',$(this).find('.transalte-cusless').text());
+									$('#shadow').addClass('hidden');
+									
+                                } else {
+									$('#more').css('max-height', '');
+									var computedHeightDown = $('#more').prop('scrollHeight');
+									
+									$(this).find('.transalte-cusmore').show();
+									$(this).attr('value','more-s');
+									$(this).find('.transalte-cusless').hide();
+									$('#shadow').removeClass('hidden');
+                                }
+                        });
+                })
+        </script>
+<?php endif; ?>

@@ -1,0 +1,192 @@
+& when (@critical) {
+    & when (@message__position = fixed) {
+        .breeze-theme #maincontent > .page.messages {
+            position: fixed;
+            .lib-css(z-index, @message__fixed__z-index);
+            top: 80px;
+            .lib-css(left, @message__fixed__left);
+            .lib-css(right, @message__fixed__right);
+            .lib-css(bottom, @message__fixed__bottom);
+            pointer-events: none;
+
+            & when (@message__fixed__container) {
+                .messages {
+                    &:extend(.container all);
+                }
+            }
+
+            .message {
+                opacity: 0;
+            }
+        }
+    }
+
+    .message {
+        display: flex;
+        align-items: flex-start;
+        gap: @1;
+        padding: @3 @4;
+        margin-bottom: @3;
+        border: 1px solid transparent;
+
+        .lib-css(font-family, @message__font-family);
+        .lib-css(font-size, @message__font-size);
+        .lib-css(font-weight, @message__font-weight);
+        .lib-css(text-transform, @message__text-transform);
+        .lib-css(border-radius, @message__border-radius);
+        .lib-css(border-width, @message__border-width);
+        .lib-css(box-shadow, @message__box-shadow);
+
+        > div {
+            .margin-right(auto);
+        }
+
+        & when (@message__text-align = center) {
+            > div {
+                .margin-left(auto);
+            }
+        }
+
+        .field + &,
+        .control & {
+            margin-top: @2;
+        }
+
+        a {
+            text-decoration: underline !important;
+        }
+
+        &.warning,
+        &.success,
+        &.notice,
+        &.error,
+        &.info, {
+            &::before {
+                flex-shrink: 0;
+                content: '';
+                width: @6;
+                height: @6;
+            }
+        }
+    }
+}
+
+& when not (@critical) {
+    .message {
+        .lib-css(background, @message__background);
+        .lib-css(color, @message__color);
+        .lib-css(border-color, @message__border-color);
+
+        a {
+            .lib-css(color, @message-link__color);
+            &:hover {
+                text-decoration: none !important;
+            }
+        }
+
+        > .button-close::before {
+            -webkit-mask-size: @4 @4;
+        }
+
+        &.success {
+            .lib-rgb(--message-bg, @message-success__background-color);
+            .lib-rgb(--message-color, @message-success__text-color);
+            .lib-rgb(--message-border-color, @message-success__border-color);
+            &::before {
+                .breeze-icon(@icon-s-check, @5);
+            }
+        }
+        &.info,
+        &.warning,
+        &.notice {
+            .lib-rgb(--message-bg, @message-info__background-color);
+            .lib-rgb(--message-color, @message-info__text-color);
+            .lib-rgb(--message-border-color, @message-info__border-color);
+            &::before {
+                .breeze-icon(@icon-s-information-circle, @5)
+            }
+        }
+        &.error {
+            .lib-rgb(--message-bg, @message-error__background-color);
+            .lib-rgb(--message-color, @message-error__text-color);
+            .lib-rgb(--message-border-color, @message-error__border-color);
+            &::before {
+                .breeze-icon(@icon-s-exclamation-circle, @5)
+            }
+        }
+    }
+
+    & when (@message__position = fixed) {
+        .breeze-theme #maincontent > .page.messages {
+            .message {
+                &:extend(.transition);
+                .lib-css(transform, @message__fixed__hidden__transform);
+                position: relative;
+
+                // See messages.js in breeze-module
+                &.shown {
+                    opacity: 1;
+                    .lib-css(transform, @message__fixed__visible__transform);
+                    pointer-events: all;
+                    & when not (@message__fixed__hide-delay = false) {
+                        animation: .3s ease-in-out @message__fixed__hide-delay forwards message-hide;
+                        -moz-animation: @message__fixed__hide-delay ease-in-out forwards moz-message-hide;
+                    }
+                }
+
+                & when not (@message__fixed__hide-delay = false) {
+                    .button-close::after {
+                        content: '';
+                        position: absolute;
+                        .right(-@1-5);
+                        bottom: 0;
+                        width: 3px;
+                        height: 100%;
+                        opacity: 0;
+                        background-color: currentColor;
+                        .lib-css(border-radius, @message__fixed__hide-progress__border-radius);
+                        animation: @message__fixed__hide-progress__duration linear @message__fixed__hide-progress__delay forwards message-progress;
+                    }
+                    &:hover,
+                    &:hover .button-close::after {
+                        animation-play-state: paused;
+                    }
+                }
+            }
+        }
+
+        & when not (@message__fixed__hide-delay = false) {
+            @keyframes message-hide {
+                100% {
+                    .lib-css(transform, @message__fixed__hidden__transform);
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+            @keyframes moz-message-hide {
+                0% {
+                    .lib-css(transform, @message__fixed__visible__transform);
+                }
+                93% {
+                    .lib-css(transform, @message__fixed__visible__transform);
+                    opacity: 1;
+                    visibility: visible;
+                }
+                100% {
+                    .lib-css(transform, @message__fixed__hidden__transform);
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+            @keyframes message-progress {
+                0% {
+                    opacity: .5;
+                }
+                100% {
+                    height: 0;
+                    opacity: 0.1;
+                }
+            }
+        }
+    }
+}

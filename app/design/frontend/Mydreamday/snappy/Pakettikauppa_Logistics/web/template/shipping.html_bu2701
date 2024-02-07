@@ -1,0 +1,323 @@
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<li id="shipping" class="checkout-shipping-address" data-bind="fadeVisible: visible()">
+    <div class="step-title" data-bind="i18n: 'Shipping Address'" data-role="title"></div>
+    <div id="checkout-step-shipping"
+         class="step-content"
+         data-role="content">
+
+        <!-- ko if: (!quoteIsVirtual) -->
+            <!-- ko foreach: getRegion('customer-email') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        <!--/ko-->
+
+        <!-- ko foreach: getRegion('address-list') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- ko foreach: getRegion('address-list-additional-addresses') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- Address form pop up -->
+        <!-- ko if: (!isFormInline) -->
+        <button type="button"
+                data-bind="click: showFormPopUp, visible: !isNewAddressAdded()"
+                class="action action-show-popup">
+            <span data-bind="i18n: 'New Address'"></span></button>
+        <div id="opc-new-shipping-address" data-bind="visible: isFormPopUpVisible()">
+            <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko foreach: getRegion('before-form') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <!-- Inline address form -->
+        <!-- ko if: (isFormInline) -->
+        <!-- ko template: 'Magento_Checkout/shipping-address/form' --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+</li>
+
+
+<!--Shipping method template-->
+<li id="opc-shipping_method"
+    class="checkout-shipping-method"
+    data-bind="fadeVisible: visible(), blockLoader: isLoading"
+    role="presentation">
+    <div class="checkout-shipping-method">
+        <div class="step-title" data-bind="i18n: 'Shipping Methods'" data-role="title"></div>
+        <!-- ko foreach: getRegion('before-shipping-method-form') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+        <div id="checkout-step-shipping_method"
+             class="step-content"
+             data-role="content"
+             role="tabpanel"
+             aria-hidden="false">
+            <!-- ko if: rates().length -->
+            <form class="form methods-shipping" id="co-shipping-method-form" data-bind="submit: setShippingInformation" novalidate="novalidate">
+                <div id="checkout-shipping-method-load" class="mdd-shipping-container">
+                    <div class="table-checkout-shipping-method">
+                        <!-- ko ifnot: checkExistmethod() -->
+                            <div class="mdd-shipping-option pickup-start">
+                                <div class="row mdd-shipping-row-first" data-bind="click: $parent.selectShippingMethod">
+                                    <div class="mdd-shipping-method" data-bind="i18n: 'Noutopaketti'" ></div>
+                                </div>
+                                <div class="row mdd-shipping-row-second">
+                                    <div class="mdd-shipping-carrier-chooser-container">
+                                        <div class="mdd-shipping-carrier-container">
+                                            <div class="mdd-shipping-pickup">
+                                                <div class="mdd-shipping-pickup-office"><b data-bind="i18n: 'Pickup location'" ></b> - <span data-bind="i18n: 'start by filling in your post code above'" ></span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- /ko -->
+                        <!--ko foreach: { data: rates(), as: 'method'}-->
+                        <div class="mdd-shipping-option">
+                            <div class="row mdd-shipping-row-first" data-bind="click: $parent.selectShippingMethod">
+                                <!-- ko ifnot: method.error_message -->
+                                <!-- ko if: $parent.rates().length == 1 -->
+                                <input class="radio"
+                                       id="mdd-shipping-alternative" 
+                                       type="radio"
+                                       ifnot="method.error_message"
+                                       ko-checked="$parent.isSelected"
+                                       ko-value="method.carrier_code + '_' + method.method_code"
+                                       data-bind="attr: {
+                                                        'checked': $parent.rates().length == 1 || $parent.isSelected,
+                                                        'value' : method.carrier_code + '_' + method.method_code,
+                                                        'id': 's_method_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                        'class': 'radio ' + method.carrier_code
+                                                    }" />
+                                <!-- /ko -->
+                                <!--ko ifnot: ($parent.rates().length == 1)-->
+                                <input type="radio"
+                                       id="mdd-shipping-alternative" 
+                                       ifnot="method.error_message"
+                                       ko-checked="$parent.isSelected"
+                                       ko-value="method.carrier_code + '_' + method.method_code"
+                                       data-bind="
+                                                    value: method.carrier_code + '_' + method.method_code,
+                                                    checked: $parent.rates().length == 1 || $parent.isSelected,
+                                                    attr: {
+                                                        'id': 's_method_' + method.carrier_code + '_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                        'class': 'radio ' + method.carrier_code
+                                                    },
+                                                    click: $parent.selectShippingMethod"
+                                       class="radio"/>
+                                <!--/ko-->
+                                <!-- /ko -->
+                                <!-- ko if:  method.carrier_code != 'bringpickup' -->
+                                <div class="mdd-shipping-method" data-bind="text: method.method_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></div>
+                                <!-- /ko -->
+                                <!-- ko if:  method.carrier_code == 'bringpickup' || method.carrier_code == 'bringdelivered' -->
+                                <div class="mdd-shipping-method class1" data-bind="text: method.carrier_title, attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}"></div>
+                                <!-- /ko -->
+                                <div class="mdd-shipping-price">
+                                    <!-- ko foreach: $parent.getRegion('price') -->
+                                    <!-- ko template: getTemplate() --><!-- /ko -->
+                                    <!-- /ko -->
+                                </div>
+                                <!-- ko if: method.carrier_code == 'pktkphomedelivery' || method.carrier_code == 'bringdelivered' -->
+                                    <!-- ko if: method.method_code == '2104' -->
+                                        <div class="mdd-shipping-notice"><!-- ko i18n: 'Toimitus kotiovelle 1-2 työpäivässä. Sovittavat toimitusajat vaihtelevat alueittain klo 9–21 välillä.'--><!-- /ko --></div>
+                                        <div class="mdd-shipping-posti"><img src="https://static.pakettikauppa.fi/logos/posti/1.1_Posti_logo_Posti_Orange_rgb.png" alt="Posti"></div>
+                                    <!-- /ko -->
+                                    <!-- ko if: method.method_code == '2102' -->
+                                        <div class="mdd-shipping-notice"><!-- ko i18n: 'Kotitoimitus seuraavana työpäivänä (8-16) kun tilaat ennen 13.00. Jos et ole kotona paketti siirtyy lähipostiin noudettavaksi.'--><!-- /ko --></div>
+                                        <div class="mdd-shipping-posti"><img src="https://static.pakettikauppa.fi/logos/posti/1.1_Posti_logo_Posti_Orange_rgb.png" alt="Posti"></div>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                                <!-- ko if: method.carrier_code == 'pktkppickuppoint' || method.carrier_code == 'bringpickup' -->
+                                    <div class="mdd-shipping-notice"><!-- ko i18n: 'Valmis noudettavaksi 1-3 arkipäivän kuluttua. Matkahuolto 2-4 arkipäivän kuluttua.'--><!-- /ko --></div>
+                                <!-- /ko -->
+                                <!-- ko if: method.carrier_code == 'bringdelivered' -->
+                                    <div class="mdd-shipping-notice"><!-- ko i18n: 'Levereras inom 2-4 dagar till din hemdörr.'--><!-- /ko --></div>
+                                <!-- /ko -->
+                                <!-- ko if: method.carrier_code == 'customshippingmethod' -->
+                                   
+                                    <!-- ko if: method.method_code == '4' -->
+                                    <div class="mdd-shipping-notice"><div data-bind="text: method.extension_attributes.shipping_notice[1]"></div></div>
+                                    <!-- /ko -->
+                                    <!-- ko if: method.method_code == '5' -->
+                                    <div class="mdd-shipping-notice"><div data-bind="text: method.extension_attributes.shipping_notice[2]"></div></div>
+                                    <!-- /ko -->
+                                    <!-- ko if: method.method_code == '6' -->
+                                    <div class="mdd-shipping-notice"><div data-bind="text: method.extension_attributes.shipping_notice[3]"></div></div>
+                                    <!-- /ko -->
+                                    <!-- ko if: method.method_code == '7' -->
+                                    <div class="mdd-shipping-notice"><div data-bind="text: method.extension_attributes.shipping_notice[4]"></div></div>
+                                    <!-- /ko -->
+                                <!-- /ko -->
+                            </div>
+                            <!-- ko if: method.carrier_code == 'pktkppickuppoint' -->
+                                <div class="row mdd-shipping-row-second">
+                                    <div class="mdd-shipping-carrier-chooser-container">
+                                        <div class="mdd-shipping-carrier-container">
+                                            <!--ko if: $parent.selectedPickupPoints-->
+                                            <div class="mdd-shipping-pickup">
+                                                <div class="mdd-shipping-pickup-image" data-bind="html: $parent.selectedPickupPoints().extension_attributes.image"></div>
+                                                <div class="mdd-shipping-pickup-office" data-bind="text: $parent.selectedPickupPoints().carrier_title, attr: {'id': 'label_carrier_' + $parent.selectedPickupPoints().method_code + '_' + $parent.selectedPickupPoints().carrier_code}"></div>
+                                            </div>
+                                            <!-- /ko -->
+                                            <button class="mdd-shipping-option-button"
+                                                    type="button" click="$parent.openPickupOptionsModal" >
+                                                <span data-bind="i18n: 'Change'"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- /ko -->
+                            <!-- ko if: method.carrier_code == 'bringpickup' -->
+                                <div class="row mdd-shipping-row-second">
+                                    <div class="mdd-shipping-carrier-chooser-container">
+                                        <div class="mdd-shipping-carrier-container">
+                                            <!--ko if: $parent.selectedPickupPoints-->
+                                            <div class="mdd-shipping-pickup">
+                                                <div class="mdd-shipping-pickup-image">
+                                                    <img data-bind="attr: { src: window.checkoutConfig.bring.logoUrl }"/>
+                                                </div>
+                                                <div class="mdd-shipping-pickup-office" data-bind="text: method.method_title, attr: {'id': 'label_carrier_' + $parent.selectedPickupPoints().method_code + '_' + $parent.selectedPickupPoints().carrier_code}"></div>
+                                            </div>
+                                            <!-- /ko -->
+                                            <button class="mdd-shipping-option-button"
+                                                    type="button" click="$parent.openPickupOptionsModal" >
+                                                <span data-bind="i18n: 'Change'"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <!-- /ko -->
+                        </div>
+
+                        <!-- ko if:  method.error_message -->
+                        <tr class="row row-error">
+                            <td class="col col-error" colspan="4">
+                                <div class="message error">
+                                    <div data-bind="text: method.error_message"></div>
+                                </div>
+                                <span class="no-display">
+                                    <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
+                                </span>
+                            </td>
+                        </tr>
+                        <!-- /ko -->
+                        <!-- /ko -->
+                        
+                        <div class="mdd-shipping-pickup-options-container"
+                             style="display: none"
+                             data-bind='mageInit:
+                                         { "Magento_Ui/js/modal/modal":
+                                         {"modalClass": "modal-shipping-pickup-options",
+                                          "responsive":"true",
+                                          "innerScroll": "true",
+                                          "buttons": []}}'>
+                            <h2 data-bind="i18n: 'Choose a pickup point'"></h2>
+                            <!--ko foreach: { data: pktkppickuppoint, as: 'method'}-->
+                            <div class="mdd-shipping-pickup-option" data-bind="click:function(){$parent.currentPickpoint(method)}">
+                                <div class="mdd-shipping-pickup-option-container" >
+                                    <!-- ko ifnot: method.error_message -->
+                                    <!-- ko if: $parent.rates().length == 1 -->
+                                    <input class="radio"
+                                           type="radio"
+                                           ifnot="method.error_message"
+                                           ko-checked="$parent.isSelected"
+                                           ko-value="method.carrier_code + '_' + method.method_code"
+                                           data-bind="attr: {
+                                                        'checked': $parent.rates().length == 1 || $parent.isSelected,
+                                                        'value' : method.carrier_code + '_' + method.method_code,
+                                                        'id': 's_method_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                        'class': 'radio ' + method.carrier_code
+                                                     }" />
+                                    <!-- /ko -->
+                                    <!--ko ifnot: ($parent.rates().length == 1)-->
+                                    <input type="radio"
+                                           ifnot="method.error_message"
+                                           ko-checked="$parent.isSelected"
+                                           ko-value="method.carrier_code + '_' + method.method_code"
+                                           data-bind="
+                                                    value: method.carrier_code + '_' + method.method_code,
+                                                    checked: $parent.rates().length == 1 || $parent.isSelected,
+                                                    attr: {
+                                                        'id': 's_method_' + method.carrier_code + '_' + method.method_code,
+                                                        'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
+                                                        'class': 'radio ' + method.carrier_code
+                                                    },
+                                                    click: $parent.selectShippingMethod"
+                                           class="radio"/>
+                                    <!--/ko-->
+                                    <!-- /ko -->
+                                    <span class="mdd-shipping-carrier-logo" data-bind="html: method.extension_attributes.image"></span>
+                                    
+                                    <!-- ko if:  method.carrier_code == 'bringpickup' || method.carrier_code == 'bringdelivered' -->
+                                    <img data-bind="attr: { src: window.checkoutConfig.bring.logoUrl }"/>
+                                    <span class="mdd-shipping-pickup-point" data-bind="text: method.method_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></span>
+                                    <!-- /ko -->
+                                    <!-- ko if:  method.carrier_code != 'bringpickup' && method.carrier_code != 'bringdelivered' -->
+                                    <span class="mdd-shipping-pickup-point" data-bind="text: method.carrier_title, attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}"></span>
+                                    <!-- /ko -->
+                                    <span class="mdd-shipping-price">
+                                                        <!-- ko foreach: $parent.getRegion('price') -->
+                                        <!-- ko template: getTemplate() --><!-- /ko -->
+                                        <!-- /ko -->
+                                                    </span>
+                                </div>
+                                <div class="row mdd-shipping-row-second">
+                                    <div class="mdd-shipping-pickup-option-separator">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ko if:  method.error_message -->
+                            <tr class="row row-error">
+                                <td class="col col-error" colspan="4">
+                                    <div class="message error">
+                                        <div data-bind="text: method.error_message"></div>
+                                    </div>
+                                    <span class="no-display">
+                                    <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}"/>
+                                </span>
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="onepage-checkout-shipping-method-additional-load">
+                    <!-- ko foreach: getRegion('shippingAdditional') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                    <!-- /ko -->
+                </div>
+                <!-- ko if: errorValidationMessage().length > 0 -->
+                <div class="message notice">
+                    <span><!-- ko text: errorValidationMessage()--><!-- /ko --></span>
+                </div>
+                <!-- /ko -->
+                <div class="actions-toolbar" id="shipping-method-buttons-container">
+                    <div class="primary">
+                        <button data-role="opc-continue" type="submit" class="button action continue primary">
+                            <span><!-- ko i18n: 'Next'--><!-- /ko --></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!-- /ko -->
+            <!-- ko ifnot: rates().length > 0 --><div class="no-quotes-block"><!-- ko i18n: 'Sorry, no quotes are available for this order at this time'--><!-- /ko --></div><!-- /ko -->
+        </div>
+    </div>
+</li>

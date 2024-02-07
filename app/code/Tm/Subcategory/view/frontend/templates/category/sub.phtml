@@ -1,0 +1,32 @@
+<?php $categories = $block->getCategoryList(); ?>
+<?php if($categories && count($categories) > 0):?>
+<div class="um-categories-viewmode category_page">
+
+<div class="content-block">
+    <div class="grid-block">
+	<ul class="layout-grid">
+        <?php foreach ($categories as $category): ?>
+		     <li class="viewmode-category-wrapper">
+                <div class="viewmode-category">
+					<div class="viewmode-category-image">
+                    <?php if ($category->getData(\Tm\Subcategory\Helper\Data::ATTRIBUTE_NAME)): ?>
+                        <a href="<?php echo $category->getUrl() ?>" title="<?php echo $category->getName() ?>">
+							<img src="<?php echo $category->getData(\Tm\Subcategory\Helper\Data::ATTRIBUTE_NAME); ?>" height="170" width="170" alt="<?php echo $category->getName() ?>" />
+						</a>
+                    <?php else: ?>
+                        <a href="<?php echo $category->getUrl() ?>" title="<?php echo $category->getName() ?>"><img src="<?php echo $block->getViewFileUrl($block->getPlaceholderImage()); ?>" height="170" width="170" alt="<?php echo $category->getName() ?>" /></a>
+                    <?php endif; ?>
+					</div>
+                    <div class="viewmode-category-name">
+					<a href="<?php echo $category->getUrl() ?>" >
+						<span><?php echo $category->getName() ?></span>
+					</a>
+                    </div>
+                </div>
+            </li>
+        <?php endforeach; ?>
+		</ul>
+    </div>
+</div>
+</div>
+<?php endif;?>

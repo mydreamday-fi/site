@@ -1,0 +1,1417 @@
+(function () {
+    'use strict';
+	var pluginName = "ctDrillDown"; // name of plugin
+	
+	var adjustHeight = function ($ul) {
+        var $wrapper = $(this),
+            newHeight;
+	
+        
+		newHeight = $('#drilldown >ul').height;
+        
+		$('#drilldown').css("height", newHeight+"px");
+		console.log('change height');
+    };
+	
+	/** public methods **/
+    var methods = {
+        /** constructor **/
+        init: function(options) {
+            options = $.extend({}, $.fn.ctDrillDown.defaults, options);
+			// console.log(options);
+            $('#back').hide();    
+            return this.each(function() { 
+                var $wrapper = $(this).addClass(options.myClass);
+                var $menu = $("ul.menu.drilldown", $wrapper);
+                
+				// console.log($wrapper);
+                // save data for laterr usage
+                $wrapper.data(pluginName, {
+                    options: options,
+                    $menu: $menu,
+                    path: new Array(),
+                    pathNumerical: new Array(),
+                    offset: $menu.width(),
+                    keysActive: false
+                });
+                
+				// console.log($wrapper.data(pluginName))
+                var defaultPath = new Array();
+                
+                // prepare markup & events
+    
+                // height of starting ul
+                adjustHeight.apply($wrapper, [$menu]);
+                
+                // widths of uls
+                var width = $wrapper.width();
+                $wrapper.css("width", "100%");
+                $("ul", $menu).css("width", "100%").css("left", "100%");
+                
+                if(options.keyboardNavigation) {
+                    var keysActive = false;
+                    
+                    // activate keyboard navigation (ctrl + m)
+                    $(document).bind("keyup", function(event) {
+                        if(event.keyCode == 77 && event.ctrlKey) {
+                            // ctrl + m clicked - focus on menu
+                            var data = $wrapper.data(pluginName);
+                            data.keysActive = !data.keysActive;
+                            
+                            if(data.keysActive) {
+                                // if no position is active - activate first from the top
+                                var path = $wrapper.data(pluginName).path;
+                                var $li;
+                                
+                                if(path.length) {
+                                    $li = $(">li:eq(0)", path[path.length-1].nextAll("ul"));
+                                } else {
+                                    $li = $(">li:eq(0)", $wrapper.data(pluginName).$menu);                                  
+                                }
+                                
+                                $li.addClass(options.activeClass);
+                            }
+                        }
+                        
+                        return true;
+                        
+                    });
+                    
+                    // attach keyboard navigation listeners (arrows, enter)
+                    $(document).bind("keyup", function(event){
+                        var data = $wrapper.data(pluginName);
+                      
+                        if(!data.keysActive && $(":focus", $wrapper).length == 0) {
+                            return true;
+                        }
+                        
+                        switch(event.keyCode) {
+                        case 8:
+                        case 13:
+                        case 37:
+                        case 38:
+                        case 39: 
+                        case 40:
+                            keyboardMove.apply($wrapper, [event.keyCode]);
+                        break;
+                        }
+                        
+                        return false;
+                    });
+                }
+
+                if(options.ajax){
+                    // prepare to ajax mode
+                    
+                    $(document).on(options.event, "li."+options.expandableClass+" > a", function(){
+                        var $this = $(this);
+                        
+                        if(!$(this).nextAll("ul").length) {
+                            // need to fetch the contents
+                            $.ajax({
+                                type: "GET",
+                                url: $this.attr("href"),
+                                dataType: "html",
+                                success: function(data) {
+                                    $this.after(data);
+                                    prepareAjaxNode.apply($wrapper, $this.nextAll("ul"));
+                                    $wrapper.ctDrillDown("goTo", $this);
+                                }
+                            });
+                            
+                        } else {
+                            $wrapper.ctDrillDown("goTo", $(this));
+                        }
+                        
+                        return false;
+                    });
+                } else {
+                    // standard mode
+                     
+                    $("li >a", $menu).each(function() {
+                        var expandable = false;
+                        
+                        if($(this).nextAll("ul").length > 0) {
+                            $(this).parent().addClass(options.expandableClass);
+                            expandable = true;
+                        }
+                        $(this).children().last().on(options.event, function() {
+                            var $this = $(this).parents('a').attr("href");
+                         window.location.href = $this;
+                          return false;
+                        });
+                        $(this).on(options.event, function() {
+                            if(!expandable) {return true;}
+
+                            $wrapper.ctDrillDown("goTo", $(this));
+                            var $drillDown = $("#drilldown");
+                            var $current = $("#current");
+                          
+                            var $backb = $(".skin-classic-light.footer #back");
+                            var breadcrumbs = $drillDown.ctDrillDown("getBreadcrumbs");
+             
+                            if(breadcrumbs.length < 2) {
+                                $backb.fadeOut();
+                            } else {
+                                $backb.fadeIn();
+                            }
+                            var current = breadcrumbs.pop();
+							// console.log(current);
+							// console.log($(current + ' > a > span:not(.ui-icon)'));
+                            $current.html($(current + ' > a > span:not(.ui-icon)').text());
+                            return false;
+                        });
+                        
+
+                        
+                        // class based state holding
+                        if($(this).hasClass(options.currentClass)) {
+                            $(this).removeClass(options.currentClass);
+                            
+                            var $expandableLi = $(this).closest("li."+options.expandableClass);
+                            var $realCurrent = $(">a", $expandableLi).addClass(options.currentClass);
+                            
+                            defaultPath = getNumericalPathForElement.apply($wrapper, [$realCurrent]);
+                        }
+                    });
+    
+                    // cookie based state holding
+                    if(options.useCookies) {
+                        var cookie = getCookie(pluginName);
+                        
+                        if(cookie != null && cookie != "") {
+                            var cookiePath = cookie.split(',');
+                            if(cookiePath.length > 0) {
+                                defaultPath = cookiePath;
+                            }
+                        }
+                    }
+                    
+                    // cookie based state has precedence with html based state
+                    if(defaultPath.length > 0) {
+                        followPath.apply($wrapper, [defaultPath, false]);
+                        $wrapper.dequeue(pluginName);
+                    }
+                }
+                
+            });
+        },
+        /**
+         * Open given position (node) in menu. 
+         * 
+         * @param $el node "a" element to be opened. If node does not exist in menu - menu will go to top. 
+         * @param withAnimation boolean Should the operation be animated (optional, default: yes)
+         * 
+         */
+        goTo: function($el, withAnimation) {
+            return this.each(function() {
+                var $wrapper = $(this),
+                    data = $wrapper.data(pluginName),
+                    pathNumerical = data.pathNumerical,
+                    options = data.options;
+                
+                if(withAnimation == undefined) {
+                    withAnimation = true;
+                } 
+                
+                if($el == undefined || $el == null) {
+                    // no element given = no action
+                    return;
+                }
+                
+				
+                if(!$('.menu.drilldown').find('.level-top').length) {
+                    // given $el is not within our menu.
+                    // go top
+                    $wrapper.ctDrillDown("goTop", withAnimation);
+                    return;
+                }
+				
+                if(!$el.closest("li").hasClass('category-item')) {
+                    // we cannot open a thing that has no children
+                    // so let's open the element that is above
+                    $wrapper.ctDrillDown("goTo", $el.closest("li."+options.expandableClass).find(">a"), withAnimation);
+                    
+                    return;
+                }
+                var elPath = getNumericalPathForElement.apply($wrapper, [$el]);
+                
+                 
+                
+                var pathNumericalLength = pathNumerical.length;
+                var pathToFollow = new Array();
+                
+                for(var i = 0; i<elPath.length; i++) {
+                    if(pathNumericalLength < i) {
+                        pathToFollow = elPath.slice(i, elPath.length);
+                        break;
+                    }
+                    
+                    if(elPath[i] != pathNumerical[i]) {
+                        // go up as many loops as needed
+                        var stepsUp = pathNumerical.length - i;
+                        for(var x=0; x<stepsUp; x++) {
+                            closeCurrentPosition.apply($wrapper, [withAnimation]);
+                        }
+                        pathToFollow = elPath.slice(i, elPath.length);
+                            
+                        break;
+                    }
+                }
+                
+                if(elPath.length < pathNumerical.length && pathToFollow.length == 0) {
+                    // go up as many times as the difference is
+                    var stepsUp = pathNumerical.length - elPath.length;
+                    for(var x=0; x<stepsUp; x++) {
+                        closeCurrentPosition.apply($wrapper, [withAnimation]);
+                    }
+                }
+                
+                
+                followPath.apply($wrapper, [pathToFollow, withAnimation]);
+                //$wrapper.dequeue(pluginName);
+                
+                return;
+            });
+        },
+        /**
+         * Go to the top of whole menu
+         * 
+         * @param withAnimation boolean Should the operation be animated (optional, default: true)
+         */
+        goTop: function(withAnimation) {
+            return this.each(function() {
+                var $wrapper = $(this),
+                    data = $wrapper.data(pluginName);
+                
+                if(withAnimation == undefined) {
+                    withAnimation = true;
+                }
+                
+                $wrapper.ctDrillDown("goUp", data.path.length, withAnimation);
+                
+            });
+        },
+        /**
+         * Go 'levels' up
+         * 
+         * @levels int How many levels to go
+         * @withAnimation boolean Shall the movement be animated (optional, default: true)
+         */
+        goUp: function(levels, withAnimation) {
+            if(withAnimation == undefined) {
+                withAnimation = true;
+            }
+            
+            return this.each(function() {
+                if(levels == 0) {
+                    // no going up
+                    return;
+                }
+                
+                var $wrapper = $(this);
+                
+                for(var i=0; i<levels; i++) {
+                    closeCurrentPosition.apply($wrapper, [withAnimation]);
+                }
+                
+                //$wrapper.dequeue(pluginName);
+                
+                return;
+            });
+        },
+        /** Get or set any option. If no value is specified, will act as a getter **/
+        option: function(key, value) {
+            if  (typeof key === "string" ) {
+                if ( value === undefined ) {
+                    // behave as a "getter"
+                    var $container = $(this),
+                        data = $container.data(pluginName);
+                    
+                    return data.options[key];
+                } else {
+                    // behave as a "setter"
+                    var $container = $(this),
+                        data = $container.data(pluginName);
+                            
+                    data.options[key] = value;
+                    $container.data(pluginName, data);
+                        
+                    return this;
+                }
+            }
+        },
+        /**
+         * Searches for given phrase in whole menu.
+         * Always returns an array containing matched nodes.
+         * 
+         * 
+         * @param phrase string The phrase we're looking for (at least 1 character)
+         * @param autoOpen boolean If one node is matched, should the menu be automatically opened. Optional, default: true
+         * @param withAnimation boolan (Used only if autoOpen is true) Shall the opening operation be animated
+         */
+        search: function(phrase, autoOpen, withAnimation) {
+            if(phrase == "") {
+                // don't allow to search for empty string
+                return new Array();
+            }
+            if(autoOpen == undefined) {
+                autoOpen = true;
+            }
+            
+            if(withAnimation == undefined) {
+                withAnimation = false;
+            }
+            
+            var $wrapper = $(this),
+                data = $wrapper.data(pluginName),
+                options = data.options,
+                regex = new RegExp(phrase, "i"),
+                $menu = data.$menu;
+            var elements = new Array();
+            
+            var $as = $("li > a", $menu);
+            $as.filter("."+options.matchClass).removeClass(options.matchClass);
+            
+            $as.each(function() {
+                if($(this).text().match(regex)) {
+                    $(this).addClass(options.matchClass);
+            
+                    elements.push($(this));
+                }
+            });
+
+            if(autoOpen && elements.length == 1) {
+                var parentsLi = $(elements[0]).parents("li");
+                var $parentEl;
+                
+                if(parentsLi.length < 2) {
+                    // found element on the top 
+                    $wrapper.ctDrillDown("goTop", withAnimation);
+                } else {
+                    $wrapper.ctDrillDown("goTo", $(">a", parentsLi[1]), withAnimation);
+                }
+            }
+
+            return elements;
+        },
+        /*
+         * Wrapper for "search" function - attaches all 
+         * the events, builds search results.
+         * 
+         * @param $form node Search form
+         * @param $resultsContainer node HTML container where the search results will be put
+         * @param autoOpen boolean If one node is matched, should the menu be automatically opened. Optional, default: true
+         * @param withAnimation boolean Shall the opening operation be animated 
+         */
+        searchWrapper: function($form, $resultsContainer, autoOpen, withAnimation) {
+            return this.each(function() {
+                var $wrapper = $(this);
+                
+                $form.submit(function() {
+                    var phrase = $("input[type=text]", $form).val();
+                    
+                    var results = $wrapper.ctDrillDown("search", phrase, autoOpen, withAnimation);
+                    
+                    $resultsContainer.html("");
+                    if(results.length > 1) {
+                        var $sWrapper = $('<div></div>');
+                        
+                        $.each(results, function(i, res) {
+                            var breadcrumb = $wrapper.ctDrillDown("getBreadcrumbs", res);
+                            var breadcrumbHtml = $wrapper.ctDrillDown("getBreadcrumbsFormatted", breadcrumb, withAnimation);
+                            
+                            $sWrapper.append(breadcrumbHtml);
+                        });
+                        $resultsContainer.html($sWrapper);
+                    }
+                    
+                    return false;
+                });
+                
+            });
+        },
+        /**
+         * Returns breadcrumbs to given element or to currently opened element as 
+         * an array of nodes (Starting node is always "span")
+         * 
+         *@param $el node Node ("a" element) to get breadcrumbs to. If null (or undefined) given will return array to currently opened node.
+         */
+        getBreadcrumbs: function ($el){
+            var $wrapper = $(this),
+                data = $wrapper.data(pluginName);
+        
+            return getBreadcrumbs.apply($wrapper, [$el]);
+        },
+        /**
+         * Returns HTML formatted with JS events attached breadcrumbs.
+         * If no arguments are provided - returns breadcrumbs to currently opened node.
+         * 
+         * @param breadcrumbs Array|node Array of nodes to build path to. Optional, default: undefined
+         * 
+         */
+        getBreadcrumbsFormatted: function(breadcrumbs, withAnimation) {
+            var $wrapper = $(this);
+            
+            if(breadcrumbs == undefined) {
+                breadcrumbs = $wrapper.ctDrillDown("getBreadcrumbs");
+            }
+            
+            if(withAnimation == undefined) {
+                withAnimation = true;
+            }
+            
+            var $container = $('<div class="breadcrumbs"></div>');
+            
+            $.each(breadcrumbs, function(i, bc){
+                var span = $('<span class="breadcrumb">'+$(bc).text()+'</span>').bind("click", function() {
+                    $wrapper.ctDrillDown("goTo", bc, withAnimation);
+                    
+                    return false;
+                });
+                $container.append(span).append(" ");
+            }); 
+            
+            return $container;
+        }
+    };
+    
+
+    /**
+     * returns path to the element
+     * 
+     * @return Array indexes of "li" elements leading to given elements
+     * 
+     */
+    var getNumericalPathForElement = function($element) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            options = data.options,
+            path = new Array();
+        
+        $element.parentsUntil("."+options.myClass, "li").each(function() {
+            path.push($(this).index());
+        });
+
+        path = path.reverse();
+        
+        return path;
+    };
+    
+    
+    /**
+     * returns path to the element
+     * 
+     * @return Array jquery "a" elements leading to given elements
+     */
+    var getElementPathForElement = function($element) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            options = data.options,
+            path = new Array();
+        
+        
+        $element.parentsUntil("."+options.myClass, "li").each(function() {
+
+            path.push($(">a", $(this)));
+        });
+
+        path = path.reverse();
+        
+        return path;
+    };
+
+    /**
+     * Will follow given path from the position we're currently at
+     */
+    var followPath = function(pathToFollow, withAnimation) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            $menu = data.$menu,
+            pathNumerical = data.pathNumerical,
+            path = data.path,
+            options = data.options;
+        
+        if(pathToFollow.length == 0) {
+            // nothing to follow
+            return;
+        }
+		// console.log('followPath 1');
+
+        if(pathNumerical.length == 0) {
+		// console.log('followPath 2');
+            // first step
+            openPosition.apply($wrapper, [$(".menu.drilldown >li:nth-child("+(pathToFollow[0] +1) +")>a"), withAnimation]);
+			
+        } else {
+		// console.log('followPath 3');
+            // further step
+            var $currentA = path[path.length-1];
+		// console.log($currentA + " > ul >li:nth-child("+(pathToFollow[0] +1)+")>a");
+            var $toBeOpenedA = $($currentA + " > ul >li:nth-child("+(pathToFollow[0] +1)+")>a");
+
+		// console.log($toBeOpenedA);
+            openPosition.apply($wrapper, [$toBeOpenedA, withAnimation]);
+        }
+        return followPath.apply($wrapper, [pathToFollow.slice(1, pathToFollow.length), withAnimation]);
+    };
+    
+    
+    /**
+     * opens given position, assuming that the ancesting ul is currently visible
+     */
+    var openPosition = function($el, withAnimation) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            options = data.options,
+            path = data.path,
+            pathNumerical = data.pathNumerical;
+        
+        
+        var $prev = $el.closest("ul");
+        var $next = $el.nextAll("ul");
+        
+// console.log('openPosition');
+// 		console.log(data);
+        //options.onBeforeOpen($el);
+
+        var duration = options.duration;
+        if(!withAnimation) {
+            duration = 0;
+        }
+		
+// console.log('openPosition');
+// 		console.log($el);
+// 		console.log($prev);
+// 		console.log($next);
+		
+        //$wrapper.queue(pluginName, function(next){
+            $next.show();
+            
+            if(options.heightAutoAdjust) {
+                adjustHeight.apply($wrapper, [$next]);
+            }
+			
+			
+		console.log( '1');
+			
+			if($prev.attr('class') == 'vertical menu drilldown'){
+				$prev.css("left", "-100%");
+			}else{
+				$prev.css("left", "0");
+			}
+		console.log($next);
+		setTimeout(function(){ 
+			console.log($next.height());
+			$('#drilldown').height($next.height() + 'px');
+		}, 500);
+		
+		
+		console.log( '.'+ $el.parent().attr('class').replaceAll(' ', '.'));
+		$('#drilldown').height($('.'+ $el.parent().attr('class').replaceAll(' ', '.') + ' > .submenu').height() + 'px');
+		
+        //});
+        //$el.parent().addClass('active');
+        /* path.push($el.parent().attr('class')); */
+        path.push('.'+ $el.parent().attr('class').replaceAll(' ', '.'));
+      
+        pathNumerical.push($el.closest("li").index());
+        
+        if(options.useCookies) {
+            setCookie(pluginName, pathNumerical);
+        }
+        
+        data.path = path;
+        data.pathNumerical = pathNumerical;
+        $wrapper.data(pluginName, data);
+		// console.log( $wrapper.data(pluginName));
+        /* options.onOpened($el); */
+        $wrapper.trigger("drilldownchange", [$el, true]);
+        
+        if(options.ajaxPreloading) {
+            ajaxPreload.apply($wrapper, [$el]);
+        }
+        return;
+    };
+    
+    
+    /**
+     * 
+     * Close currently opened node
+     * 
+     * @param withAnimation boolean Should it be animated (optional, default: yes)
+     * 
+     */
+    var closeCurrentPosition = function(withAnimation) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            $menu = data.$menu,
+            options = data.options,
+            path = data.path,
+            pathNumerical = data.pathNumerical;
+    
+        
+        var $current = path.pop();
+        if($current == null) {
+            // we're already on top, nothing to do
+            return;
+        }
+        // console.log($current);
+        var $parent = $($current).closest("ul");
+        var $currentUl = $($current).nextAll("ul");
+
+        var duration = options.duration;
+        if(withAnimation == false) {
+            duration = 0;
+        }
+        
+        //options.onBeforeClose($current);
+
+        //$wrapper.queue(pluginName, function(next){
+            $parent.show();
+             $($current + ' > .submenu').hide('slide');
+            /* $parent.animate({
+                left: "+="+data.offset
+            }, {
+                duration: duration,
+                easing: options.easing,
+                complete: function() {
+                    $currentUl.hide();
+                    next();
+                }
+            }); */
+			
+        // console.log('parent');
+        // console.log($parent);
+        // console.log($parent.attr('class'));
+			if($parent.attr('class') == 'vertical menu drilldown'){
+				$parent.css("left", "0");
+				
+			}else{
+				$parent.css("left", "100%");
+			}
+        
+            if(options.heightAutoAdjust) {
+                adjustHeight.apply($wrapper, [$parent]);
+            }
+			
+		//console.log( '12');
+		//console.log( $parent.attr('class'));
+		//console.log( '.'+ $parent.attr('class').replaceAll(' ', '.'));
+		$('#drilldown').height($($parent.attr('class').replaceAll(' ', '.') + ' > .submenu').height() + 'px');
+        pathNumerical.pop();
+        
+        if(options.useCookies) {
+            setCookie(pluginName, pathNumerical);
+        }
+        
+        data[pathNumerical] = pathNumerical;
+        data[path] = path;
+		
+        $wrapper.data(pluginName, data);
+        
+        var $el = path[path.length-1];
+       // options.onClosed($current);
+        $wrapper.trigger("drilldownchange", [$el, false]);
+    };
+    
+    
+    /**
+     * Returns breadcrumbs (starter + path) to the given element or
+     * to the currently opened element
+     *
+     * @param $el node Element to get breadcrumbs to. Leave it undefined to get breadcrumbs to currently opened
+     */
+    var getBreadcrumbs = function($el) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            options = data.options;
+        
+        var start = new Array();
+        start.push($('<span class="">'+options.startName+"</span>"));
+        
+        var path = data.path;
+        if($el != undefined) {
+            path = getElementPathForElement.apply($wrapper, [$el]);
+        }
+        
+        return start.concat(path);
+            
+    };
+    
+    
+    /**
+     * Cookie handler - setter
+     */
+    var setCookie = function (name,value,days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            var expires = "; expires="+date.toGMTString();
+        }
+        else var expires = "";
+        document.cookie = name+"="+value+expires+"; path=/";
+    };
+    
+
+    /**
+     * Cookie handler -getter
+     */
+    var getCookie = function (name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    };
+    
+    /**
+     * Preloads all
+     * positions in given $el
+     * 
+     * @param $el node "a" element to preload subpositions of
+     */
+    var ajaxPreload = function($el) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            options = data.options;
+        
+        $el.nextAll("ul").find("li."+options.expandableClass+">a").each(function() {
+            var $this = $(this);
+            if($this.nextAll("ul").length>0) {
+                // element already has children
+                return;
+            }
+            
+            $.ajax({
+                type: "GET",
+                url: $this.attr("href"),
+                dataType: "html",
+                success: function(data) {
+                    $this.after(data);
+
+                    prepareAjaxNode.apply($wrapper, $this.nextAll("ul"));
+                }
+            });
+        });
+    };
+
+    /**
+     * Prepares freshly added thru ajax ul node 
+     */
+    var prepareAjaxNode = function($ul) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName);
+        
+        $($ul).css("width", "100%").css("left","100%");
+        data.$menu = $(">ul", $wrapper);
+        $wrapper.data(pluginName, data);
+    };
+    
+    
+    /**
+     * Change menu position
+     */
+    var keyboardMove = function(direction) {
+        var $wrapper = $(this),
+            data = $wrapper.data(pluginName),
+            path = data.path,
+            options = data.options,
+            $ul = data.$menu;
+        
+        if(path.length > 0) {
+            var $current = path[path.length-1];
+            $ul = $current.nextAll("ul");
+        } else {
+            if(direction == 37) {
+                // if we're on top and want to move up - do nothing
+                return;
+            }
+        }
+        
+        var $activeLi = $("> li."+options.activeClass, $ul);
+        
+        if(direction == 37 || direction == 8) {
+            // go up one step (we already know we're not on top)
+            
+            $wrapper.ctDrillDown("goUp", 1);
+            $activeLi.removeClass(options.activeClass);
+            $ul.parent().parent("ul").find(">li:eq(0)").addClass(options.activeClass); 
+            
+            return;
+        }
+        
+        if(direction == 39 || direction == 13) {
+            // go down (into)
+            var $active = $(">a", $activeLi);
+            
+            if(!$activeLi.hasClass(options.expandableClass)) {
+                // no move - this li is not expandable
+                if(direction == 13 && $active.length) {
+                    window.location = $active.attr("href");
+                }
+                
+                return;
+            }
+            
+            if($active.length) {
+                $wrapper.ctDrillDown("goTo", $active);
+                $activeLi.removeClass(options.activeClass);
+                $(">li:eq(0)", $active.nextAll("ul")).addClass(options.activeClass);
+            }
+            
+            return;
+        }
+        
+        
+        // now we could go left or right only
+        
+        if(direction == 40) {
+            // go down
+            var $newLi = $activeLi.next("li");
+            if($activeLi.length == 0) {
+                $newLi = $(">li:eq(0)", $ul);
+            }
+        } else if(direction == 38) {
+            // go up
+            var $newLi = $activeLi.prev("li");
+            if($activeLi.length == 0) {
+                $newLi = $(">li:last", $ul);
+            }
+        } 
+        
+        if($newLi.length > 0) {
+            // change active only if we're not first element
+            $activeLi.removeClass(options.activeClass);
+            $newLi.addClass(options.activeClass);
+        }
+        
+        return;
+        
+        
+    };
+	
+	
+	$.fn.ctDrillDown = function(method) {
+        if ( methods[method] ) {
+            return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+        } else if ( typeof method === 'object' || ! method ) {
+            return methods.init.apply( this, arguments );   
+        } else {
+            $.error( 'Method ' +  method + ' does not exist on Drill Down!' );
+        }  
+    };
+    
+    
+    /** default values for plugin options **/
+    $.fn.ctDrillDown.defaults = {
+            myClass: "ctDrillDown", // class given automatically to the element
+            expandableClass: "category-item", // Non ajax mode: this class will be given to "li" with children. Ajax mode: give this class to "li" that has children.
+            onOpened: $.noop, // Callback fired just after submenu was opened (element passed as an argument)
+            onBeforeOpen: $.noop, // Callback fired just before submenu opening (element passed as an argument)
+            onClosed: $.noop, // Callback fired just after submenu was closed (closed element passed as an argument)
+            onBeforeClose: $.noop, // Callback fired just before submenu is closed (closing element passed as an argument)
+            duration: 150, // Opening/closing animation time
+            easing: "linear", // Type of easing (see jquery ui docs for more)
+            currentClass: "current", // Menu will automatically open on the element having this class on load (think of stateful menu)
+            useCookies: false, // Set it true to activate cookie-based stateful
+            heightAutoAdjust: true, // If true, plugin will update the height of container automatically based on content
+            matchClass: "match", // class given to element found by search method
+            startName: "", // name of first breadcrumb
+            ajax: false, // set true to enable ajax mode
+            event: "click", // event on which to open submenu
+            keyboardNavigation: true, // is keyboard navigation active
+            activeClass: "active" // currently active position, i.e. selected on keyboard
+    };
+	
+	
+    $.widget('menu', {
+        component: 'menu',
+        options: {
+            menus: 'ul',
+            dropdown: 'ul',
+            useInlineDisplay: true,
+            responsive: true,
+            expanded: false,
+            showDelay: 42,
+            hideDelay: 300,
+            delay: 0,
+            mediaBreakpoint: '(max-width: 767px)'
+        },
+
+        /** Init widget */
+        create: function () {
+            var mql,
+                self = this,
+                themeBreakpoint = $('body').var('--navigation-media-mobile');
+
+            if (this.options.responsive) {
+                mql = window.matchMedia(themeBreakpoint || this.options.mediaBreakpoint);
+                mql.addListener(this.toggleMode.bind(this));
+                this.toggleMode(mql);
+            } else if (this.options.mode === 'mobile') {
+                this.toggleMobileMode();
+            } else {
+                this.toggleDesktopMode();
+            }
+
+            this.focusTrap = this.createFocusTrap(this.element.closest('.navigation-wrapper,.nav-sections'));
+            this._setActiveMenu(); // varnish fix
+
+            if (this.element.closest('.nav-sections, .page-header, .navigation-wrapper').length) {
+                this.addToggleListener();
+            }
+
+            $('li.parent > ul', this.element).hide('slide');
+            $('li.parent', this.element)
+                .children('a')
+                .filter(function () {
+                    return $(this).children('.ui-icon').length === 0;
+                })
+                .prepend('<span class="ui-menu-icon ui-icon"></span>');
+
+            $('li.parent', this.element).on('keydown.menu', function (e) {
+                var dropdown = $(this).children(self.options.dropdown),
+                    visibleDropdowns = $(self.options.dropdown + '.shown');
+
+                if (['Enter', 'Escape', ' '].indexOf(e.key) === -1) {
+                    return;
+                }
+
+                if (e.key === 'Enter' && dropdown.hasClass('shown')) {
+                    return;
+                }
+
+                e.stopPropagation();
+
+               if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+
+                    visibleDropdowns.not(dropdown).each(function () {
+                        if (!$(this).has(dropdown.get(0)).length) {
+                            self.close($(this));
+                        }
+                    });
+
+                    if (dropdown.hasClass('shown')) {
+                        self.close(dropdown);
+                    } else {
+                        self.open(dropdown);
+                    }
+                } else if (e.key === 'Escape' && visibleDropdowns.length) {
+                    self.close(visibleDropdowns.last());
+                } 
+            });
+
+           $('a', this.element).on('click.menu', '.ui-icon', function () {
+                var dropdown = $(this).closest('a').siblings(self.options.dropdown);
+
+                if (!dropdown.length) {
+                    return;
+                }
+
+                if (dropdown.hasClass('shown')) {
+                    self.close(dropdown);
+                } else {
+                    self.open(dropdown);
+                }
+
+                return false;
+            }); 
+        },
+
+        /** Hide expanded menu's, remove event listeneres */
+        destroy: function () {
+            $.breeze.scrollbar.reset();
+
+            $(this.options.dropdown + '.shown', this.element).each(function (i, dropdown) {
+                this.close($(dropdown));
+            }.bind(this));
+            $('html').removeClass('nav-open').removeClass('nav-before-open');
+
+            if (this.element.closest('.nav-sections, .navigation-wrapper, .page-header').length) {
+                $(document).off('click.menu').off('keydown.menu');
+            }
+
+            this._super();
+        },
+
+        /** [addToggleListener description] */
+        addToggleListener: function () {
+            $('[data-action="toggle-nav"]').attr('tabindex', 0);
+
+            $(document)
+                .on('click.menu', '[data-action="toggle-nav"]', this.toggleNavbar.bind(this))
+                .on('keydown.menu', '[data-action="toggle-nav"]', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        this.toggleNavbar();
+                    } else if (e.key === 'Escape') {
+                        this.closeNavbar();
+                    }
+                }.bind(this));
+
+            this._on(document, {
+                keydown: function (e) {
+                    if (e.key === 'Escape' && $('html').hasClass('nav-open')) {
+                        this.closeNavbar();
+                    }
+                }.bind(this)
+            });
+        },
+
+        /** [toggleNavbar description] */
+        toggleNavbar: function (flag) {
+            if (flag === false || $('html').hasClass('nav-open')) {
+                this.closeNavbar();
+            } else {
+                this.openNavbar();
+            }
+        },
+
+        /** Show mobile navbar */
+        openNavbar: function () {
+            var self = this,
+                html = $('html');
+
+            $.breeze.scrollbar.hide();
+            self._trigger('navBeforeOpen');
+            html.addClass('nav-before-open');
+            setTimeout(function () {
+                html.addClass('nav-open');
+                self._trigger('navAfterOpen');
+            }, self.options.showDelay);
+            setTimeout(self.focusTrap.activate, 300); // wait till css animation is over
+        },
+
+        /** Hide mobile navbar  */
+        closeNavbar: function () {
+            var self = this,
+                html = $('html');
+
+            self._trigger('navBeforeClose');
+            self.focusTrap.deactivate();
+            html.removeClass('nav-open');
+            setTimeout(function () {
+                $.breeze.scrollbar.reset();
+                html.removeClass('nav-before-open');
+                self._trigger('navAfterClose');
+            }, self.options.hideDelay);
+        },
+
+        /** Toggles between mobile and desktop modes */
+        toggleMode: function (event) {
+            if (event.matches) {
+                this.toggleMobileMode();
+            } else {
+                this.toggleDesktopMode();
+            }
+        },
+
+        /** Enable desktop mode */
+        toggleDesktopMode: function () {
+            var self = this;
+
+            $(self.options.dropdown + '.shown').each(function () {
+                self.close($(this));
+            });
+
+            $('li.parent', this.element)
+                .off('click.menu')
+                .on('mouseenter.menu', function () {
+                    var dropdown = $(this).children(self.options.dropdown);
+
+                    if (this.breezeTimeout) {
+                        clearTimeout(this.breezeTimeout);
+                        delete this.breezeTimeout;
+                    }
+
+                    self.open(dropdown);
+                })
+                .on('mouseleave.menu', function () {
+                    this.breezeTimeout = setTimeout(function () {
+                        self.close($(this).children(self.options.dropdown));
+                    }.bind(this), 80);
+                });
+
+            this._trigger('afterToggleDesktopMode');
+        },
+
+        /** Enable mobile mode */
+        toggleMobileMode: function () {
+            var self = this;
+			
+			var subMenus;
+
+			// console.log($(this.element));
+            $(this.element).off('mouseenter mouseleave');
+            this._on({
+
+                /**
+                 * @param {jQuery.Event} event
+                 */
+                'click .ui-menu-item:has(a)': function (event) {
+                    var target;
+
+                    event.preventDefault();
+                    target = $(event.target).closest('.ui-menu-item');
+                    //target.get(0).scrollIntoView();
+
+                    if (!target.hasClass('level-top') || !target.has('.ui-menu').length) {
+                        window.location.href = target.find('> a').attr('href');
+                    }
+                },
+
+                /**
+                 * @param {jQuery.Event} event
+                 */
+                'click .ui-menu-item:has(.ui-state-active)': function (event) {
+                    this.collapseAll(event, true);
+                }
+            });
+		
+			
+            /* subMenus = this.element.find('.level-top');
+            $.each(subMenus, $.proxy(function (index, item) {
+				var itemClass = $(item).attr('class');
+                var category = $( item ).find('span').not('.ui-menu-icon').text(),
+                    categoryUrl = $( item ).attr('href'),
+                    menu = $( item ).nextAll('.submenu');
+
+				
+                this.categoryParent = $('<li>')
+                    .addClass('ui-menu-item all-category')
+                    .html('<a href='+ categoryUrl +'>All '+ category +'</a>');
+
+                if (menu.find('.all-category').length === 0) {
+					console.log('addd');
+                    menu.prepend(this.categoryParent);
+                }
+
+            }, this)); */
+			
+			
+			// console.log('test 1');
+			var $breadcrumbs = $(".skin-classic-light.breadcrumbs");
+			var $drillDown = $("#drilldown");
+			var $current = $("#current");
+			var $back = $(".skin-classic-light.footer");
+			var $backb = $(".skin-classic-light.footer #back");
+                    
+			$drillDown.ctDrillDown({
+				myClass: "ctDrillDown", // class given automatically to the element
+				expandableClass: "category-item", // Non ajax mode: this class will be given to "li" with children. Ajax mode: give this class to "li" that has children.
+				onOpened: $.noop, // Callback fired just after submenu was opened (element passed as an argument)
+				onBeforeOpen: $.noop, // Callback fired just before submenu opening (element passed as an argument)
+				onClosed: $.noop, // Callback fired just after submenu was closed (closed element passed as an argument)
+				onBeforeClose: $.noop, // Callback fired just before submenu is closed (closing element passed as an argument)
+				duration: 150, // Opening/closing animation time
+				easing: "linear", // Type of easing (see jquery ui docs for more)
+				currentClass: "current", // Menu will automatically open on the element having this class on load (think of stateful menu)
+				heightAutoAdjust: false, // If true, plugin will update the height of container automatically based on content
+				startName: "", // name of first breadcrumb
+				ajax: false, // set true to enable ajax mode
+				event: "click", // event on which to open submenu
+				keyboardNavigation: false, // is keyboard navigation active
+				activeClass: "active" // currently active position, i.e. selected on keyboard
+			});
+                    
+			$back.click(function() {
+				$drillDown.ctDrillDown("goUp", 1);
+				// console.log('test');
+				var breadcrumbs = $drillDown.ctDrillDown("getBreadcrumbs");
+                     
+				if(breadcrumbs.length < 2) {
+					$backb.fadeOut();
+				} else {
+					$backb.fadeIn();
+				}
+			   
+				var current = breadcrumbs.pop();
+				
+				// console.log(current);
+				// console.log($(current).attr);
+				try{
+					$current.html($(current + ' > a > span:not(.ui-icon)').text());
+                    console.log('tes-1');
+					console.log($(current).attr('class').replaceAll(' ', '.') );
+					$('#drilldown').height($('.' +  $(current).attr('class').replaceAll(' ', '.') + ' > .submenu').height() + 'px');
+
+				}catch(err){
+					console.log('tes back');
+					console.log($(current));
+					console.log($( window ).height());
+					console.log($( document ).height());
+					$('#drilldown').height( $( window ).height() - 303 + ' px');
+					$current.html('');
+					// $('.level0.submenu').hide('slide');
+				}
+				return false;
+			});
+			
+			
+		   
+			/* $(document).on('click','.nav-toggle',function (){
+		   
+				$("#drilldown ul.submenu").removeClass("ui-menu");
+			}); */
+			/* var breadcrumbs = $drillDown.ctDrillDown("getBreadcrumbs");
+		 
+			if(breadcrumbs.length < 2) {
+				$backb.fadeOut();
+			} else {
+				$backb.fadeIn();
+			}
+		   
+			var current = breadcrumbs.pop();
+			$current.html(current.text()); */
+
+			//ada
+            /* $('li.parent', this.element)
+                .off('mouseenter.menu mouseleave.menu')
+                .on('click.menu', function () {
+                    var dropdown = $(this).children(self.options.dropdown);
+
+                    if (!dropdown.length || dropdown.hasClass('shown')) {
+                        return;
+                    }
+
+                    self.open(dropdown);
+
+                    return false;
+                });
+
+            this._trigger('afterToggleMobileMode'); */
+        },
+
+        /** [open description] */
+        open: function (dropdown) {
+            if(!this.checkMobile()){
+				this._trigger('beforeOpen', {
+					dropdown: dropdown
+				});
+				// console.log(dropdown);
+				dropdown.addClass('shown')
+					.parent('li')
+					.addClass('opened');
+
+				if (this.options.useInlineDisplay) {
+					dropdown.show();
+				}
+            }
+        },
+
+        /** [open description] */
+        close: function (dropdown) {
+            
+            if(!this.checkMobile()){
+			var eventData = {
+                dropdown: dropdown,
+                preventDefault: false
+            };
+
+            this._trigger('beforeClose', eventData);
+
+            if (eventData.preventDefault === true) {
+                return;
+            }
+
+			// console.log(dropdown);
+            dropdown.removeClass('shown')
+                .parent('li')
+                .removeClass('opened');
+
+            if (this.options.useInlineDisplay) {
+                dropdown.hide('slide');
+            }
+
+            this._trigger('afterClose', {
+                dropdown: dropdown
+            });
+			}
+        },
+
+        /** [_setActiveMenu description] */
+        _setActiveMenu: function () {
+			
+            if(!this.checkMobile()){
+				var currentUrl = window.location.href.split('?')[0];
+
+				if (!this._setActiveMenuForCategory(currentUrl)) {
+					this._setActiveMenuForProduct(currentUrl);
+				}
+            }
+        },
+
+        /** [_setActiveMenuForCategory description] */
+        _setActiveMenuForCategory: function (url) {
+			
+            if(!this.checkMobile()){
+				var activeCategoryLink = this.element.find('a[href="' + url + '"]'),
+					classes,
+					classNav;
+
+				if (!activeCategoryLink || !activeCategoryLink.parent().hasClass('category-item')) {
+					return false;
+				} else if (!activeCategoryLink.parent().hasClass('active')) {
+					activeCategoryLink.parent().addClass('active');
+					classes = activeCategoryLink.parent().attr('class');
+					classNav = classes.match(/(nav\-)[0-9]+(\-[0-9]+)+/gi);
+
+					if (classNav) {
+						this._setActiveParent(classNav[0]);
+					}
+				}
+
+				return true; 
+			}
+        },
+
+        /** [_setActiveParent description] */
+        _setActiveParent: function (childClassName) {
+			
+            if(!this.checkMobile()){
+				var parentElement,
+					parentClass = childClassName.substr(0, childClassName.lastIndexOf('-'));
+
+				if (parentClass.lastIndexOf('-') !== -1) {
+					parentElement = this.element.find('.' + parentClass);
+
+					if (parentElement) {
+						parentElement.addClass('has-active');
+					}
+					this._setActiveParent(parentClass); 
+				}
+            }
+        },
+
+        /** [_setActiveMenuForProduct description] */
+        _setActiveMenuForProduct: function (currentUrl) {
+			
+            if(!this.checkMobile()){
+				var categoryUrlExtension,
+					lastUrlSection,
+					possibleCategoryUrl,
+					//retrieve first category URL to know what extension is used for category URLs
+					firstCategoryUrl = this.element.children('li').find('a').attr('href');
+
+				if (firstCategoryUrl) {
+					lastUrlSection = firstCategoryUrl.substr(firstCategoryUrl.lastIndexOf('/'));
+					categoryUrlExtension = lastUrlSection.lastIndexOf('.') !== -1 ?
+						lastUrlSection.substr(lastUrlSection.lastIndexOf('.')) : '';
+
+					possibleCategoryUrl = currentUrl.substr(0, currentUrl.lastIndexOf('/')) + categoryUrlExtension;
+					this._setActiveMenuForCategory(possibleCategoryUrl);
+				}
+            }
+        },
+        checkMobile : function () {
+            if(window.matchMedia('(max-width: 767px)').matches){ 
+				return true;
+			}
+			return false;
+        }
+    });
+})();

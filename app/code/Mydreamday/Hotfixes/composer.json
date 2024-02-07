@@ -1,0 +1,26 @@
+{
+    "name": "mydreamday/module-hotfixes",
+    "description": "Hotfixes for 3rd party modules",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Joseph Metcalfe",
+            "email": "me@joemet.co.uk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "magento/framework": "102.0.*|103.0.*",
+        "mirasvit/module-seo-filter": "^1.2.5"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Mydreamday\\Hotfixes\\": ""
+        }
+    }
+}

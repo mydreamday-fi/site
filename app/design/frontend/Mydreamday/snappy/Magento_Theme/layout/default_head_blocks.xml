@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- <link rel="stylesheet" src="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&amp;display=swap" src_type="url" /> -->
+        <css src="css/local-m.css"/>
+        <css src="css/local-l.css" media="screen and (min-width: 768px)"/>
+    </head>
+</page>

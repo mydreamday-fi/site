@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/sections.xsd">
+    <action name="wishlist/index/add"> <!-- When an item is added to the wishlist -->
+        <section name="wishlist"/> <!-- Update the wishlist section -->
+    </action>
+    <action name="wishlist/index/remove"> <!-- When an item is removed from the wishlist -->
+        <section name="wishlist"/>
+    </action>
+    <!-- Add other actions as necessary -->
+</config>

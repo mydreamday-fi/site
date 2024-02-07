@@ -1,0 +1,31 @@
+{
+    "name": "meetanshi/module-payshiprestriction",
+    "description": "Restrict Shipping and Payment Method Based on Customer Groups for Magento 2",
+    "require": {
+        "php": "~5.5.0|~5.6.0|~7.0.0|7.0.2|7.0.4|~7.0.6|~7.1.0|~7.2.0|~7.3.0|~7.4.0|^8.0.0|^8.1.0|^8.2.0"
+    },
+    "type": "magento2-module",
+    "version": "1.1.1",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Meetanshi\\PayshipRestriction\\": ""
+        }
+    },
+	"support": {
+        "email": "help@meetanshi.com"
+    },
+    "authors": [
+        {
+            "name": "Meetanshi",
+            "email": "help@meetanshi.com",
+            "homepage": "https://meetanshi.com"
+        }
+    ]
+}

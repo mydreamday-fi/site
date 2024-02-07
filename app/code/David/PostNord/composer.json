@@ -1,0 +1,30 @@
+{
+    "name": "mydreamday/module-postnord",
+    "description": "Postnord shipping carrier integration",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "David",
+            "email": ""
+        },
+        {
+            "name": "Joseph Metcalfe",
+            "email": "me@joemet.co.uk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "magento/framework": "102.0.*|103.0.*",
+        "magento/module-sales": ">=103.0.2"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "David\\Postnord\\": ""
+        }
+    }
+}

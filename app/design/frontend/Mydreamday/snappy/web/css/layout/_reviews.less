@@ -1,0 +1,190 @@
+& when (@critical) {
+    .product-reviews-summary {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: @1;
+    }
+    .rating-summary {
+        .label {
+            &:extend(.breeze-sr-only);
+        }
+    }
+    .rating-result {
+        position: relative;
+        width: 5 * @rating-icon__width;
+        height: @rating-icon__height;
+
+        &::before {
+            opacity: .2;
+        }
+
+        > span {
+            position: relative;
+            display: block;
+
+            span {
+                &:extend(.breeze-sr-only);
+            }
+        }
+
+        &::before,
+        > span::before {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: @rating-icon__height;
+        }
+    }
+    .reviews-actions {
+        display: flex;
+        align-items: center;
+        gap: @2;
+        a {
+            &:extend(.breeze-link all);
+            .lib-css(color, @review-action__color);
+        }
+    }
+
+    .review-add {
+        .review-legend {
+            display: none;
+        }
+    }
+    .review-field-rating {
+        &s {
+            margin: 0;
+            legend {
+                display: none !important;
+            }
+        }
+        > .label {
+            min-width: 80px;
+        }
+    }
+    .review-control-vote {
+        color: @divider__color;
+        height: @6;
+        width: 5 * @6;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+        }
+        input {
+            &:extend(.breeze-sr-only);
+        }
+        label {
+            position: absolute;
+            opacity: 0;
+        }
+    }
+
+    .review-list {
+        .limiter,
+        .toolbar:first-child {
+            display: none;
+        }
+        .review {
+            &-item {
+                display: flex;
+                flex-direction: column;
+                gap: @2;
+                + .review-item {
+                    margin-top: @4;
+                    padding-top: @4;
+                    border-top: 1px solid @divider__color;
+                }
+            }
+            &-title {
+                font-weight: 500;
+            }
+            &-ratings {
+                order: -1;
+            }
+            &-content {
+                margin-bottom: @1;
+            }
+            &-details {
+                display: flex;
+                align-items: baseline;
+                gap: @1;
+                opacity: .6;
+            }
+            &-date {
+                .breeze-text-sm();
+                .review-details-label {
+                    &:extend(.breeze-sr-only);
+                }
+            }
+        }
+    }
+}
+
+& when not (@critical) {
+    .rating-result::before,
+    .rating-result > span::before {
+        .breeze-icon(@rating-icon, 1.25rem);
+        -webkit-mask-repeat: repeat-x;
+        .modrtl(-webkit-mask-position, 0 50%, 100% 50%);
+    }
+    .rating-result > span {
+        color: @rating__color;
+    }
+    .review-control-vote {
+        &::before,
+        label::before {
+            .breeze-icon(@rating-icon);
+            -webkit-mask-repeat: repeat-x;
+            -webkit-mask-position: 0 50%;
+        }
+        label:hover,
+        input:checked + label,
+        input:focus-visible + label {
+            opacity: 1;
+        }
+        input:focus-visible + label, {
+            .breeze-focus-ring();
+        }
+        label {
+            cursor: pointer;
+            color: @rating__color;
+            height: @6;
+            .left(0);
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+            }
+            span {
+                &:extend(.breeze-sr-only);
+            }
+        }
+        .rating-1 {
+            z-index: 5;
+            width: @6;
+        }
+        .rating-2 {
+            z-index: 4;
+            width: 2 * @6;
+        }
+        .rating-3 {
+            z-index: 3;
+            width: 3 * @6;
+        }
+        .rating-4 {
+            z-index: 2;
+            width: 4 * @6
+        }
+        .rating-5 {
+            z-index: 1;
+            width: 5 * @6;
+        }
+    }
+    .review-field-ratings {
+        .mage-error + .mage-error {
+            display: none;
+        }
+    }
+}

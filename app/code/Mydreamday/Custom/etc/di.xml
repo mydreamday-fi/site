@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Checkout\Controller\Cart\UpdatePost" type="Mydreamday\Custom\Controller\Cart\UpdatePost" />
+	<type name="Magento\InventoryCatalogFrontendUi\Model\IsSalableQtyAvailableForDisplaying">
+        <plugin name="get_is_salable_qty_plugin"
+                type="Mydreamday\Custom\Plugin\Model\IsSalableQtyAvailableForDisplaying"/>
+    </type>
+	<preference for="Magetrend\PdfTemplates\Model\Pdf\Element\Items\Column\Renderer\ProductName" type="Mydreamday\Custom\Model\Pdf\Element\Items\Column\Renderer\ProductName" />
+	<type name="Magento\Customer\Controller\Account\CreatePost">
+        <plugin sortOrder="1" name="customCreatePost" type="Mydreamday\Custom\Plugin\Controller\Account\CreatePostPlugin"/>
+    </type>
+	<type name="Magento\ReCaptchaValidation\Model\Validator">
+        <plugin name="RecaptchaValidatorAroundPlugin" type="Mydreamday\Custom\Plugin\Model\RecaptchaValidator"/>
+    </type>
+	<preference for="Magento\Customer\Model\AccountManagement" type="Mydreamday\Custom\Model\AccountManagement" />
+
+    <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
+        <plugin name="add_description_to_carrier" type="Mydreamday\Custom\Plugin\Carrier\Description" disabled="false" sortOrder="30"/>
+    </type>
+	<type name="Magento\Quote\Model\Quote">
+        <plugin name="mydreamday_custom_quote_before_save" type="Mydreamday\Custom\Plugin\QuotePlugin" sortOrder="10"/>
+    </type>
+	<type name="Magento\Catalog\Model\Product\Copier">
+        <plugin name="mydreamday_custom_product_copier" type="Mydreamday\Custom\Plugin\Product\CopierPlugin" sortOrder="1"/>
+    </type>
+	<type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="translate_products_command" xsi:type="object">Mydreamday\Custom\Console\Command\TranslateProductsCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,2 +1,46 @@
-# 2024-02-06 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# http://stackoverflow.com/questions/987142
+# http://stackoverflow.com/questions/9162919
+# http://stackoverflow.com/questions/8024924#comment15884195_8025106
+*
+!*/
+!/.editorconfig
+!/.gitignore
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "Move Composer credentias from `composer.json` to `auth.json`": https://github.com/mydreamday-fi/site/issues/3
+# 		`!/composer.json`
+!/readme.md
+!/app/code/**/*
+!/app/design/frontend/Mydreamday/**/*
+!/app/etc/config.php
+/dev
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "How to fix intereceptors generation on `bin/magento setup:di:compile` in Magento ≥ 2.2 in Windows?":
+# https://mage2.pro/t/4702
+!/setup/src/Magento/Setup/Module/Di/Code/Reader/ClassesScanner.php
+/update/
+/vendor/aws/aws-crt-php
+/vendor/magento/framework/Test
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "How to fix «Unable to apply data patch Magento\Theme\Setup\Patch\Data\RegisterThemes for module Magento_Theme»
+# in Magento ≥ 2.3.5 in Windows?" https://mage2.pro/t/6177
+!/vendor/magento/framework/Image/Adapter/Gd2.php
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "How to fix «file_put_contents(generated/metadata/primary|global|plugin-list.php):
+# failed to open stream: No such file or directory
+# in lib\internal\Magento\Framework\Interception\PluginListGenerator.php on line 414» in Magento 2.4-develop in Windows?"
+# https://mage2.pro/t/6178
+!/vendor/magento/framework/Interception/PluginListGenerator.php
+# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "How to fix the «Invalid template file» / «require_js.phtml» failure for 2.3 ≤ Magento < 2.4.5 in Windows?"
+# https://mage2.pro/t/5774
+!/vendor/magento/framework/View/Element/Template/File/Validator.php
+/vendor/magento/magento2-base
+/vendor/magento/magento2-functional-testing-framework
+/vendor/tubalmartin
+# 2023-07-22 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# Today I noticed that `git add . && git commit -a -m refactoring && git push`
+# started to commit subfolders which are git repositories (for an unknown reason).
 /_my
+/vendor/mage2pro
+/vendor/mydreamday

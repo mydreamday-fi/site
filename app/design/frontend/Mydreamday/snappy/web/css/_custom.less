@@ -1,0 +1,211 @@
+@import 'custom/variables/_icons.less';
+
+@theme__brand-color: @black;
+@link__color: @black;
+@link__text-color: @black;
+
+@font-size__xs: @2-5;
+@font-size__sm: @3;
+@font-size__base: @3-5;
+@font-size__lg: @4;
+@font-size__xl: @4-5;
+@font-size__2xl: @5;
+@font-size__3xl: @7;
+@font-size__4xl: @8-5;
+@font-size__5xl: @11;
+
+// Messages
+@message__position: fixed;
+@message__box-shadow: ~"0 4px 7px 0 rgb(0 0 0 / 9%)";
+@message__text-align: center;
+@message__border-width: 0;
+@message__border-radius: @1;
+@message-success__text-color: @green-800;
+@message-success__background-color: @green-200;
+@message-info__text-color: @blue-600;
+@message-info__background-color: @blue-100;
+@message-error__text-color: @red-600;
+@message-error__background-color: @red-100;
+
+@font-sans: 'Montserrat', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+@h1__font-size: @font-size__3xl;
+@h1__font-weight: 500;
+@h1__line-height: @line-height__3xl;
+@minicart-counter__mode: inline; // badge|compact|inline
+@minicart-counter__mode-inline__min-width: 5px;
+@sidebar__media-lg__gap: @5;
+@breadcrumbs__min-height: 30px;
+@listing-grid__row-gap: @8;
+
+& when (@critical) {
+	.minisearch {
+        .action.search {
+            & when (@minisearch-button__reset) {
+                .margin-left(-@10);
+            }
+		}
+		.control {
+			.input-text {
+				.padding-right(@10);
+			}
+		}
+	}
+	
+	.header.content > .switcher > .actions > .action {
+        @media @media-md-down {
+            span {
+                display: block;
+            }
+        }
+	}
+	.switcher-wishlist a.action.switcher-trigger span {
+		position: absolute;
+		min-width: 1.25rem;
+		height: 1.25rem;
+		background-color: #999999;
+		border-radius: 10px;
+		right: -5px;
+		color: #fff;
+		top: -3px;
+		font-size: 0.85rem;
+		line-height: 1.4rem;
+		text-align: center;
+	}
+	
+    .minicart-wrapper {
+        .action.showcart {
+			.padding-right(@4);
+			display: flex;
+            align-items: center;
+
+            .counter.qty {
+                position: absolute;
+                min-width: @5;
+                height: @5;
+                display: flex;
+                justify-content: center;
+                &:extend(.text-xs);
+				background-color: #32d3a3;
+				border-radius: 10px;
+				right: 8px;
+				color: #fff;
+				top: -5px;
+				font-size: 0.85rem;
+				align-items: center;
+
+                .counter-label span {
+                    display: none;
+                }
+            }
+		}
+	}
+	
+	.toolbar {
+        ~ .products {
+            margin: @2 0;
+        }
+	}
+	
+	.page-header .block .block-title {
+		font-size: 1.2rem;
+	}
+}
+
+& when (@critical = unsure), (@critical) {
+    .cookie-bar {
+		background: whitesmoke;
+		z-index: 9000000000;
+
+        .cookie-bar-text {
+            max-width: unset;
+			
+			h3::after { 
+				.breeze-icon-critical(@icon-cookies, @8, @8); 
+				margin-left: 20px;
+				display: inline-block;
+				position: relative;
+				top: 5px;
+			}
+        }
+
+        .cookie-bar-buttons {
+			font-weight: 500;
+
+            a {
+                color: ~"rgba(var(--link-color, 136, 136, 136), var(--link-alpha, 1))";
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+			button {
+				border-radius: 3px;
+				font-weight: 500;
+				padding: 1rem 1.5rem;
+			}
+        }
+	}
+	
+	button.glider-next::before,button.glider-prev::before {
+		-webkit-mask-size: 4rem 4rem;
+		width: 2rem;
+		height: 4rem;
+	}
+	.glider-next::before { .breeze-icon-critical(@icon-chevron-right, @10, @10); }
+	.glider-prev::before { .breeze-icon-critical(@icon-chevron-left, @10, @10); }
+}
+
+@media @media-md-down {
+	.block.filter {
+		.sidebar & {
+			.filter-title {
+				z-index: 99;
+				border: 1px solid #e4e4e4;
+				padding: 6px 32px;
+				height: 37px;
+				color: #777;
+				margin-left: 0;
+				max-width: 13rem;
+				border-radius: 7px;
+			}
+		}
+	}
+}
+
+& when (@media-common = true) {
+	& when (@critical = unsure), (@critical) {
+		.breeze-gallery {
+			.thumbnails {
+				padding-bottom: 3px;
+				margin-bottom: 5px;
+				
+				img {
+					filter: none;
+				}
+				.item {
+					border: 1px solid #eee;
+					background: none;
+					filter: contrast(85%);
+					
+					&.active {
+						border: 1px solid #32d3a3;
+						filter: none;
+					}
+					
+					&:focus::after,
+					&.active::after {
+						box-shadow: none;
+					}
+				}
+			}
+		}
+	}
+}
+& when not (@critical) {
+    .towishlist.in-wishlist::before {
+        .breeze-icon(@icon-heart-filled);
+    }
+	.modal-popup, .modal-custom {
+        justify-content: center;
+	}
+}

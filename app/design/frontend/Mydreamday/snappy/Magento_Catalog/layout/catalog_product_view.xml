@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- <css src="Magento_Theme::css/glider/glider.css" /> -->
+		<css src="Magento_Catalog::css/glider.css"/>
+        <script src="Magento_Catalog::js/glider.js" />
+    </head>
+    <body>
+		<referenceContainer name="product.info.media">
+			<container name="skip_gallery_before.wrapper" as="skip_gallery_before_wrapper" label="Skip Gallery Before Wrapper">
+				<block class="Magento\Framework\View\Element\Template" name="skip_gallery_before" template="Your_Template_Path"/>
+			</container>
+		</referenceContainer>
+		<referenceContainer name="product.info.media">
+			<container name="skip_gallery_after.wrapper" as="skip_gallery_after_wrapper" label="Skip Gallery After Wrapper">
+				<block class="Magento\Framework\View\Element\Template" name="skip_gallery_after" template="Your_Template_Path"/>
+			</container>
+		</referenceContainer>
+        <referenceContainer  name="product.info.main">
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.manufacturer" template="Magento_Catalog::product/view/custom-manufacturer.phtml"/>
+			
+			<block class="Magento\Catalog\Block\Product\View" name="product_benefits" template="Magento_Catalog::product/view/benefits.phtml" after="-"/>
+        </referenceContainer>
+		
+        <move element="page.main.title" destination="product.info.wrapper"/>
+        <move element="product.info.manufacturer" destination="product.info.wrapper" before="page.main.title"/>
+        <move element="product.info.main" destination="product.info.wrapper"/>
+        <move element="product.info.overview" destination="product.info.price" before="product.price.final"/>
+        <move element="product.info.extrahint" destination="product.info.media" before="product.info.media.image"/>
+        <move element="product.info.stock.sku" destination="product.info.price" after="product.price.final"/>
+		
+        <referenceBlock name="product.info.sku" remove="true" />
+		<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="view.addto.compare" remove="true" />
+		<referenceBlock name="skip_gallery_after" remove="true" />
+		<referenceBlock name="skip_gallery_before" remove="true" />
+		<referenceContainer name="content">
+			<container name="product.info.details.wrapper.main" as="product_info_details_wrapper_main" label="Product Info Details Wrapper Main" htmlTag="div" htmlClass="product-info-details-wrapper-main"/>
+		</referenceContainer>
+
+		<referenceBlock name="product.info.blog.relatedposts.block" remove="true" />
+    </body>
+</page>

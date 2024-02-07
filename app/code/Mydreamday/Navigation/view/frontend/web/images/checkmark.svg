@@ -1,0 +1,9 @@
+<svg class="checkmark-icon custom-svg" viewBox="0 0 25 17" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-labelledby="SVGInline-623-title">
+    <title id="SVGInline-623-title">
+        Checkbox
+    </title>
+    <path class="check_path" fill="green"
+          d="M24.593 2.226L9.294 16.65c-.234.226-.54.35-.867.35-.337 0-.663-.133-.898-.38L.374 9.407c-.5-.494-.5-1.32 0-1.813a1.255 1.255 0 0 1 1.797 0l6.286 6.325L22.86.35c.244-.237.571-.351.908-.351.347.01.663.155.888.413a1.284 1.284 0 0 1-.062 1.813"
+          fill-rule="evenodd"></path>
+</svg>

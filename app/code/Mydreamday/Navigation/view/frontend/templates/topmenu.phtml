@@ -1,0 +1,149 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * Top menu for store
+ *
+ * @var $block Mydreamday\Navigation\Block\MobileMenu
+ */
+
+$isLoggedIn = $block->isLoggedIn();
+$customerName = $block->getCustomerName();
+
+$_menuHtml = $block->getMenuHtml();
+
+$additionalMenuItem = $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('mdd_custom_menu_after')
+    ->toHtml();
+
+$helper = $block->getHelper('Mydreamday_Navigation::data');
+
+$storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+$storeId = $block->getCurrentStoreId();
+
+// Use the helper to get the store view scoped configuration values
+$customerServiceText = $block->getConfigValue('navigation/links/customer_service_text', $storeId);
+$customerServiceLink = $block->getConfigValue('navigation/links/customer_service_link', $storeId);
+
+$faq1Text = $block->getConfigValue('navigation/links/faq1_text', $storeId);
+$faq1Link = $block->getConfigValue('navigation/links/faq1_link', $storeId);
+
+$faq2Text = $block->getConfigValue('navigation/links/faq2_text', $storeId);
+$faq2Link = $block->getConfigValue('navigation/links/faq2_link', $storeId);
+
+$faq3Text = $block->getConfigValue('navigation/links/faq3_text', $storeId);
+$faq3Link = $block->getConfigValue('navigation/links/faq3_link', $storeId);
+
+?>
+
+<nav id="mobile-menu-container"
+     class="mobile-menu-container"
+     data-action="navigation"
+     data-mage-init='{"mobileMenu": {}}'>
+    <div class="mobile-menu-header">
+        <div class="mobile-menu-header-items user-logged-in">
+            <button class="go-back-button">
+                <img width="16" height="24" class="mobile-menu-header-back-caret"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/caret.svg'); ?>"
+                     alt="Dropdown"/>
+                <p class="mobile-menu-menu-title"></p>
+            </button>
+            <button class="mobile-menu-welcome-user"
+                    onclick="this.parentElement.parentElement.classList.toggle('activated');">
+                <p class="mobile-menu-hello"><?= $block->escapeHtml(__('Hi')) ?> <?= $customerName ?></p>
+                <img width="9" height="16" class="mobile-menu-header-dropdown-caret"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/caret.svg'); ?>"
+                     alt="Dropdown"/>
+            </button>
+        </div>
+        <div class="mobile-menu-header-links user-logged-in">
+            <a href="<?= $block->getBaseUrl(); ?>sales/order/history/">
+                <?= $block->escapeHtml(__('My orders')) ?>
+                <img width="24" height="24"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/sent.svg'); ?>"
+                     alt="My orders"/>
+            </a>
+            <a href="<?= $block->getBaseUrl(); ?>wishlist">
+                <?= $block->escapeHtml(__('My wishlist')) ?>
+                <img width="24" height="24"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/list.svg'); ?>"
+                     alt="My wishlist"/>
+            </a>
+            <a href="<?= $block->getBaseUrl(); ?>stocknotification/customer">
+                <?= $block->escapeHtml(__('Out-of-stock subscriptions')) ?>
+                <img width="26" height="26"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/out-stock.svg'); ?>"
+                     alt="Out-of-stock subscriptions"/>
+            </a>
+            <a href="<?= $block->getBaseUrl(); ?>customer/account/index">
+                <?= $block->escapeHtml(__('My profile')) ?>
+                <img width="24" height="24"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/user.svg'); ?>"
+                     alt="My profile"/>
+            </a>
+            <a href="<?= $block->getBaseUrl(); ?>customer/account/logout">
+                <?= $block->escapeHtml(__('Log out')) ?>
+                <img width="24" height="24"
+                     src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/logout.svg'); ?>"
+                     alt="Log out"/>
+            </a>
+        </div>
+        <div class="mobile-menu-header-items user-logged-out">
+            <div class="mobile-menu-header-items-first">
+                <button class="go-back-button">
+                    <img width="16" height="24" class="mobile-menu-header-back-caret"
+                         src="<?php echo $block->getViewFileUrl('Mydreamday_Navigation/images/caret.svg'); ?>"
+                         alt="Dropdown"/>
+                    <p class="mobile-menu-menu-title"></p>
+                </button>
+                <p class="mobile-menu-welcome"><?= $block->escapeHtml(__('Hello!')) ?></p>
+            </div>
+            <a class="mobile-menu-login"
+               href="<?= $block->getBaseUrl(); ?>customer/account/login"><?= $block->escapeHtml(__('Log in')) ?></a>
+        </div>
+    </div>
+    <div class="mm-spn">
+        <ul id="mobile-menu-menu">
+            <?= /* @noEscape */
+            $_menuHtml ?>
+            <?php if ($additionalMenuItem): ?>
+                <li class="level0 nav-6 category-item level-top ui-menu-item">
+                    <?= $additionalMenuItem ?>
+                </li>
+            <?php endif; ?>
+            <?= $block->getChildHtml() ?>
+        </ul>
+    </div>
+    <div class="mobile-menu-footer">
+        <a class="mobile-menu-customer-service" href="<?= $block->escapeUrl($customerServiceLink) ?>">
+            <img width="29" height="29" class="mobile-menu-customer-service-icon"
+                 src="<?= $block->getViewFileUrl('Mydreamday_Navigation/images/question.svg'); ?>"
+                 alt="<?= $block->escapeHtmlAttr($customerServiceText) ?>"/>
+            <?= $block->escapeHtml($customerServiceText) ?>
+        </a>
+        <div class="mobile-menu-additional-links">
+            <a class="mobile-menu-additional-link" href="<?= $block->escapeUrl($faq1Link) ?>">
+                <img width="18" height="18" class="checkmark-icon"
+                     src="<?= $block->getViewFileUrl('Mydreamday_Navigation/images/checkmark.svg'); ?>"
+                     alt="<?= $block->escapeHtmlAttr($faq1Text) ?>"/>
+                <?= $block->escapeHtml($faq1Text) ?>
+            </a>
+            <a class="mobile-menu-additional-link" href="<?= $block->escapeUrl($faq2Link) ?>">
+                <img width="18" height="18" class="checkmark-icon"
+                     src="<?= $block->getViewFileUrl('Mydreamday_Navigation/images/checkmark.svg'); ?>"
+                     alt="<?= $block->escapeHtmlAttr($faq2Text) ?>"/>
+                <?= $block->escapeHtml($faq2Text) ?>
+            </a>
+            <a class="mobile-menu-additional-link" href="<?= $block->escapeUrl($faq3Link) ?>">
+                <img width="18" height="18" class="checkmark-icon"
+                     src="<?= $block->getViewFileUrl('Mydreamday_Navigation/images/checkmark.svg'); ?>"
+                     alt="<?= $block->escapeHtmlAttr($faq3Text) ?>"/>
+                <?= $block->escapeHtml($faq3Text) ?>
+            </a>
+        </div>
+    </div>
+</nav>

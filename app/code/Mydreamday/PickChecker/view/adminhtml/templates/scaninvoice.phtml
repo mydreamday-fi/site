@@ -1,0 +1,87 @@
+<div class="scaninvoice-form">
+    <input type="text" id="invoice_id" name="invoice_id" placeholder="Scan invoice number.." disabled/><br />
+    <button class="btn-scan primary">Start</button>
+	<!-- <audio id="notification" src="<?php echo $this->getViewFileUrl('Mydreamday_PickChecker::audio/go-new.mp3'); ?>" muted></audio> -->
+</div>
+<script>
+    require(['jquery'], function($){
+        $('.btn-scan').click(function(){
+            var invoice_id = $('#invoice_id').val().trim();
+            if(!invoice_id){
+                alert('Enter invoice id');
+                return false;
+            }
+            $.ajax({
+                url: '<?= $block->getUrl('pickchecker/invoice/check') ?>',
+                method: 'post',
+                data: {
+                    invoice_id: invoice_id
+                },
+                showLoader: true
+            }).done(function(url){
+                if(url == 'fail'){
+                    alert('Invalid invoice id');
+                    return false;
+                }
+                window.location.href = url;
+            })
+        })
+    })
+</script>
+<script>
+    require(['jquery', 'Mydreamday_PickChecker/js/onscan'], function($, onScan) {
+        var options = {};
+       
+        setTimeout(function() {
+            options.onScan = function(barcode, qty) {
+                if(!barcode){
+                    alert('Can not scan invoice id');
+                    return false;
+                }
+                $('#invoice_id').val(barcode);
+                $.ajax({
+                    url: '<?= $block->getUrl('pickchecker/invoice/check') ?>',
+                    method: 'post',
+                    data: {
+                        invoice_id: barcode
+                    },
+                showLoader: true
+                }).done(function(url){
+                    if(url == 'fail'){
+                        alert('Invalid invoice id');
+                        return false;
+                    }
+                    window.location.href = url;
+                })
+
+            };
+            onScan.attachTo(document, options);
+            $('#invoice_id').removeAttr('disabled');
+			// document.getElementById('notification').muted = false;
+			// document.getElementById('notification').play();
+        }, 3000);
+    })
+</script>
+<style>
+    .scaninvoice-form {
+        text-align: center;
+        padding: 100px 0;
+    }
+
+    .scaninvoice-form input {
+        text-align: center;
+        padding: 10px;
+        min-width: 300px;
+        border: 2px solid gainsboro;
+        font-size: 16px;
+        display: inline-block;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .scaninvoice-form button {
+        min-width: 300px;
+        font-size: 21px;
+        font-weight: 600;
+    }
+</style>

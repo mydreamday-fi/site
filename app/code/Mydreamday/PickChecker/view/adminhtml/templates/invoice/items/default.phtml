@@ -1,0 +1,26 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php /** @var $block \Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer */ ?>
+<?php $_item = $block->getItem() ?>
+<?php $_item->setStoreId($_item->getInvoice()->getStoreId()) ?>
+<?php $block->setPriceDataObject($_item) ?>
+<tr class="id-<?= $_item->getSku() ?>" data-qty="<?= (float) $_item->getQty() ?>" data-scaned-qty="0">
+    <td class="col-product"><?= $block->getColumnHtml($_item, 'name') ?></td>
+    <td class="col-price">
+        <?= $block->getColumnHtml($_item, 'price') ?>
+    </td>
+    <td class="col-qty"><?= (float) $_item->getQty() ?></td>
+    <td class="col-status" data-picked="0">
+        <img src="/media/icon/fail.png" style="max-width: 36px" />
+    </td>
+    <td class="col-qty-scaned" data-qty-s="0">
+        0
+    </td>
+    <td class="col-approve-row">
+        <button type="button" class="approve-row">Approve</button>
+    </td>
+</tr>

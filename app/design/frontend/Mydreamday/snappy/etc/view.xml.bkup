@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<view xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/view.xsd">
+    <media>
+        <images module="Magento_Catalog">
+            <!-- Product grid listing -->
+            <image id="category_page_grid" type="small_image">
+                <width>242</width>
+                <height>242</height>
+            </image>
+            <image id="category_page_grid-srcset-1" type="small_image">
+                <width>332</width>
+                <height>332</height>
+            </image>
+            <image id="category_page_grid-srcset-2" type="small_image">
+                <width>365</width>
+                <height>365</height>
+            </image>
+            <image id="category_page_grid-srcset-3" type="small_image">
+                <width>402</width>
+                <height>402</height>
+            </image>
+			<image id="category_page_grid-srcset-4" type="small_image">
+                <width>484</width>
+                <height>484</height>
+            </image>
+			<image id="category_page_grid-srcset-5" type="small_image">
+                <width>548</width>
+                <height>548</height>
+            </image>
+			<image id="category_page_grid-srcset-6" type="small_image">
+                <width>603</width>
+                <height>603</height>
+            </image>
+
+            <!-- Product list listing -->
+            <image id="category_page_list" type="small_image">
+                <width>270</width>
+                <height>270</height>
+            </image>
+            <image id="category_page_list-srcset-1" type="small_image">
+                <width>415</width>
+                <height>415</height>
+            </image>
+            <image id="category_page_list-srcset-2" type="small_image">
+                <width>540</width>
+                <height>540</height>
+            </image>
+
+            <!-- Product page image -->
+            <image id="product_page_image_large" type="image"/>
+            <image id="product_page_image_medium" type="image">
+                <width>603</width>
+                <height>603</height>
+            </image>
+			<image id="product_page_image_medium-srcset-1" type="image">
+                <width>832</width>
+                <height>832</height>
+            </image>
+            <image id="product_page_image_medium-srcset-2" type="image">
+                <width>1032</width>
+                <height>1032</height>
+            </image>
+            <image id="product_page_image_medium-srcset-3" type="image">
+                <width>1248</width>
+                <height>1248</height>
+            </image>
+
+            <image id="product_page_image_small" type="thumbnail">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="product_page_image_small-srcset-1" type="thumbnail">
+                <width>176</width>
+                <height>176</height>
+            </image>
+            <image id="product_swatch_image_small" type="thumbnail">
+                <width>75</width>
+                <height>75</height>
+            </image>
+
+            <!-- These lists use category_page_list fallback. Not need to declare srcset for them -->
+            <image id="recently_viewed_products_list_content_widget" type="small_image">
+                <width>540</width>
+                <height>540</height>
+            </image>
+            <image id="recently_compared_products_list_content_widget" type="small_image">
+                <width>540</width>
+                <height>540</height>
+            </image>
+
+            <!-- These lists use category_page_grid fallback. Not need to declare srcset for them -->
+            <image id="recently_viewed_products_grid_content_widget" type="small_image">
+                <width>472</width>
+                <height>472</height>
+            </image>
+            <image id="recently_compared_products_grid_content_widget" type="small_image">
+                <width>472</width>
+                <height>472</height>
+            </image>
+            <image id="related_products_list" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="new_products_content_widget_grid" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="upsell_products_list" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="wishlist_thumbnail" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="cart_page_product_thumbnail" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="cart_cross_sell_products" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="product_swatch_image_medium" type="small_image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="customer_account_product_review_page" type="image">
+                <width>236</width>
+                <height>236</height>
+            </image>
+            <image id="product_swatch_image_large" type="image"/>
+
+            <image id="bundled_product_customization_page" type="thumbnail">
+                <width>140</width>
+                <height>140</height>
+            </image>
+            <image id="product_comparison_list" type="small_image">
+                <width>140</width>
+                <height>140</height>
+            </image>
+            <image id="product_small_image" type="small_image">
+                <width>140</width>
+                <height>140</height>
+            </image>
+            <image id="product_small_image-srcset-1" type="small_image">
+                <width>280</width>
+                <height>280</height>
+            </image>
+
+            <!-- <image id="customer_account_my_tags_tag_view" type="small_image">
+                <width>100</width>
+                <height>100</height>
+            </image> -->
+            <image id="gift_messages_checkout_thumbnail" type="thumbnail">
+                <width>100</width>
+                <height>100</height>
+            </image>
+            <image id="customer_shared_wishlist" type="small_image">
+                <width>100</width>
+                <height>100</height>
+            </image>
+            <image id="wishlist_small_image" type="small_image">
+                <width>100</width>
+                <height>100</height>
+            </image>
+            <!-- <image id="product_page_more_views" type="thumbnail">
+                <width>100</width>
+                <height>100</height>
+            </image> -->
+
+            <!-- <image id="shared_wishlist_email" type="small_image">
+                <width>135</width>
+                <height>135</height>
+            </image> -->
+
+            <image id="mini_cart_product_thumbnail" type="thumbnail">
+                <width>156</width>
+                <height>156</height>
+            </image>
+
+            <image id="product_base_image" type="image">
+                <width>270</width>
+                <height>270</height>
+            </image>
+
+            <!-- <image id="review_page_product_image" type="small_image">
+                <width>270</width>
+                <height>270</height>
+            </image> -->
+            <image id="new_products_content_widget_list" type="small_image">
+                <width>270</width>
+                <height>270</height>
+            </image>
+
+            <!-- <image id="product_page_main_image" type="image">
+                <width>700</width>
+                <height>700</height>
+            </image> -->
+            <!-- <image id="product_page_main_image_default" type="image">
+                <width>700</width>
+                <height>700</height>
+            </image> -->
+
+            <!-- <image id="gift_messages_checkout_small_image" type="small_image">
+                <width>75</width>
+                <height>75</height>
+            </image> -->
+            <!-- <image id="product_stock_alert_email_product_image" type="small_image">
+                <width>75</width>
+                <height>75</height>
+            </image> -->
+            <image id="recently_viewed_products_images_only_widget" type="small_image">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="sendfriend_small_image" type="small_image">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="new_products_images_only_widget" type="small_image">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="product_thumbnail_image" type="thumbnail">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="recently_compared_products_images_only_widget" type="thumbnail">
+                <width>75</width>
+                <height>75</height>
+            </image>
+            <image id="rss_thumbnail" type="thumbnail">
+                <width>75</width>
+                <height>75</height>
+            </image>
+
+            <image id="recently_viewed_products_images_names_widget" type="small_image">
+                <width>156</width>
+                <height>156</height>
+            </image>
+            <image id="recently_compared_products_images_names_widget" type="thumbnail">
+                <width>156</width>
+                <height>156</height>
+            </image>
+            <image id="side_column_widget_product_thumbnail" type="thumbnail">
+                <width>156</width>
+                <height>156</height>
+            </image>
+            <image id="wishlist_sidebar_block" type="thumbnail">
+                <width>156</width>
+                <height>156</height>
+            </image>
+        </images>
+    </media>
+    <vars module="Magento_Catalog">
+        <var name="gallery">
+            <var name="mode">default</var> <!-- default/expanded -->
+            <var name="allowfullscreen">true</var>
+            <var name="keyboard">true</var>
+            <var name="loop">true</var>
+            <var name="nav">thumbs</var> <!-- false/thumbs/dots -->
+            <var name="navdir">horizontal</var> <!-- horizontal/vertical -->
+            <var name="caption">false</var> <!-- true/false -->
+        </var>
+        <var name="magnifier">
+            <var name="enabled">false</var> <!-- true/false -->
+            <var name="mode">auto</var> <!-- auto(stage with fallback to lens)/stage/lens -->
+            <var name="zoom">auto</var> <!-- auto or number. When using number, consider changing upscale option. -->
+            <var name="zoomMin">1.6</var> <!-- min zoom to use, otherwise - disable magnifier. -->
+            <var name="zoomMax">2.5</var> <!-- max zoom to use, otherwise - downscale the image. -->
+            <var name="upscale">1.5</var> <!-- max upscale to satisfy zoomMin. -->
+            <var name="stage">
+                <var name="position">right</var> <!-- left/right/inner -->
+                <var name="width">100w</var> <!-- number or percent of width/height -->
+                <var name="height">100h</var> <!-- number or percent of width/height -->
+            </var>
+            <var name="lens">
+                <var name="shape">circle</var> <!-- rectangle/circle -->
+                <var name="width">180</var> <!-- number -->
+                <var name="height">180</var> <!-- number -->
+            </var>
+        </var>
+    </vars>
+    <vars module="Magento_ConfigurableProduct">
+        <var name="gallery_switch_strategy">prepend</var> <!-- prepend/replace -->
+    </vars>
+    <vars module="Swissup_Breeze">
+        <var name="enabled">1</var>
+        <var name="turbo">1</var>
+        <var name="responsive_images">1</var>
+        <var name="sizes">
+            <var name="category_page_grid"><![CDATA[
+                (min-width: 1280px) 242px,
+                (min-width: 1024px) calc((100vw - 234px - 4.25rem) / 4),
+                (min-width: 768px) calc((100vw - 194px - 3rem) / 3),
+                (min-width: 640px) calc((100vw - 14px - 3rem) / 3),
+                calc((100vw - 2rem) / 2)
+            ]]></var>
+            <var name="category_page_grid-1column"><![CDATA[
+                (min-width: 1280px) 241.625px,
+                (min-width: 1024px) calc((100vw - 234px - 4.25rem) / 4),
+                (min-width: 768px) calc((100vw - 194px - 3rem) / 3),
+                (min-width: 640px) calc((100vw - 14px - 3rem) / 3),
+                calc((100vw - 2rem) / 2)
+            ]]></var>
+            <var name="category_page_grid-cms-full-width">use:category_page_grid</var>
+            <var name="category_page_grid-3columns"><![CDATA[
+                (min-width: 1280px) 236px,
+                (min-width: 1024px) calc((100vw - 440px - 7rem) / 3),
+                (min-width: 768px) calc((100vw - 180px - 4rem) / 3),
+                (min-width: 640px) calc((100vw - 3rem) / 3),
+                calc((100vw - 2rem) / 2)
+            ]]></var>
+            <var name="category_page_list"><![CDATA[
+                (min-width: 1280px) 270px,
+                (min-width: 1024px) calc((100vw - 220px - 3.75rem) * 0.28),
+                (min-width: 768px) calc((100vw - 180px - 2.75rem) * 0.28),
+                calc((100vw - 1.75rem) * 0.28)
+            ]]></var>
+            <var name="category_page_list-1column"><![CDATA[
+                (min-width: 1024px) 270px,
+                calc((100vw - 1.75rem) * 0.28)
+            ]]></var>
+            <var name="category_page_list-cms-full-width">use:category_page_list-1column</var>
+            <var name="category_page_list-3columns"><![CDATA[
+                (min-width: 1280px) 207px,
+                (min-width: 1024px) calc((100vw - 440px - 5.75rem) * 0.28),
+                (min-width: 768px) calc((100vw - 180px - 2.75rem) * 0.28),
+                calc((100vw - 1.75rem) * 0.28)
+            ]]></var>
+            <var name="product_page_image_medium"><![CDATA[
+                (min-width: 1280px) 603px,
+                (min-width: 768px) calc((100vw - 26px - 2rem) / 2),
+                calc(100vw - 1rem)
+            ]]></var>
+            <var name="product_page_image_small">75px</var>
+            <var name="cart_page_product_thumbnail"><![CDATA[
+                (min-width: 1280px) 223px,
+                (min-width: 1024px) calc((100vw - 2rem - 420px - 190px) * 0.4),
+                (min-width: 768px) calc((100vw - 2rem - 220px - 190px) * 0.4),
+                calc((100vw - 1rem - 190px) * 0.4)
+            ]]></var>
+            <var name="cart_cross_sell_products">use:category_page_grid-1column</var>
+            <var name="new_products_content_widget_grid">use:category_page_grid</var>
+        </var>
+    </vars>
+    <!-- Bundles are always generated by Magento regardless of config value -->
+    <vars module="Js_Bundle">
+        <var name="bundle_size">512KB</var>
+    </vars>
+    <exclude>
+        <item type="file">Lib::chartjs/Chart.min.js</item>
+        <item type="file">Lib::jquery/jquery.min.js</item>
+        <item type="file">Lib::jquery/jquery-ui-1.9.2.js</item>
+        <item type="file">Lib::jquery/jquery.details.js</item>
+        <item type="file">Lib::jquery/jquery.hoverIntent.js</item>
+        <item type="file">Lib::jquery/colorpicker/js/colorpicker.js</item>
+        <item type="file">Lib::requirejs/require.js</item>
+        <item type="file">Lib::requirejs/text.js</item>
+        <item type="file">Lib::legacy-build.min.js</item>
+        <item type="file">Lib::moment.js</item>
+        <item type="file">Lib::moment-timezone-with-data.js</item>
+        <item type="file">Lib::mage/captcha.js</item>
+        <item type="file">Lib::mage/dropdown_old.js</item>
+        <item type="file">Lib::mage/list.js</item>
+        <item type="file">Lib::mage/loader_old.js</item>
+        <item type="file">Lib::mage/webapi.js</item>
+        <item type="file">Lib::mage/zoom.js</item>
+        <item type="file">Lib::mage/translate-inline-vde.js</item>
+        <item type="file">Lib::mage/requirejs/mixins.js</item>
+        <item type="file">Lib::mage/requirejs/static.js</item>
+        <item type="file">Magento_Customer::js/zxcvbn.js</item>
+        <item type="file">Magento_Catalog::js/zoom.js</item>
+        <item type="file">Magento_Ui::js/lib/step-wizard.js</item>
+        <item type="file">Magento_Ui::js/form/element/ui-select.js</item>
+        <item type="file">Magento_Ui::js/form/element/file-uploader.js</item>
+        <item type="file">Magento_Ui::js/form/components/insert.js</item>
+        <item type="file">Magento_Ui::js/form/components/insert-listing.js</item>
+        <item type="directory">Magento_Ui::js/timeline</item>
+        <item type="directory">Magento_Ui::js/grid</item>
+        <item type="directory">Magento_Ui::js/dynamic-rows</item>
+        <item type="directory">Magento_Ui::templates/timeline</item>
+        <item type="directory">Magento_Ui::templates/grid</item>
+        <item type="directory">Magento_Ui::templates/dynamic-rows</item>
+        <item type="directory">Magento_Swagger::swagger-ui</item>
+        <item type="directory">Lib::modernizr</item>
+        <item type="directory">Lib::tiny_mce</item>
+        <item type="directory">Lib::varien</item>
+        <item type="directory">Lib::jquery/editableMultiselect</item>
+        <item type="directory">Lib::jquery/jstree</item>
+        <item type="directory">Lib::jquery/fileUploader</item>
+        <item type="directory">Lib::css</item>
+        <item type="directory">Lib::lib</item>
+        <item type="directory">Lib::extjs</item>
+        <item type="directory">Lib::prototype</item>
+        <item type="directory">Lib::scriptaculous</item>
+        <item type="directory">Lib::less</item>
+        <item type="directory">Lib::mage/adminhtml</item>
+        <item type="directory">Lib::mage/backend</item>
+    </exclude>
+</view>

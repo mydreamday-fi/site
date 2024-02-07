@@ -1,0 +1,21 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/* @var \Magento\Sales\Block\Adminhtml\Order\Invoice\View\Form $block */
+?>
+<?php $_invoice = $block->getInvoice() ?>
+<?php $_order = $_invoice->getOrder() ?>
+<?= $block->getChildHtml('order_info') ?>
+
+
+<section class="admin__page-section">
+    <div id="invoice_item_container" class="admin__page-section-content">
+        <?= $block->getChildHtml('invoice_items') ?>
+    </div>
+</section>
+

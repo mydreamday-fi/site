@@ -1,0 +1,65 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var Magento\Wishlist\Block\Catalog\Product\ProductList\Item\AddTo\Wishlist $block */
+?>
+<?php
+$helper = $this->helper('Mydreamday\Wishlist\Helper\Data');
+$productId = $block->getProduct()->getId();
+$isInWishlist = $helper->isProductInWishlist($productId);
+$isLoggedIn = $helper->isLoggedIn();
+?>
+
+<?php if ($block->getWishlistHelper()->isAllow()) : ?>
+    <?php $iconClass = $isInWishlist ? 'in-wishlist' : ''; ?>
+    <a href="#"
+       class="action towishlist <?= $iconClass ?>"
+	   data-loggedin="<?= $isLoggedIn ? 'true' : 'false' ?>"
+       title="<?= $isInWishlist ? $block->escapeHtmlAttr(__('Added to Wish List')) : $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+       aria-label="<?= $isInWishlist ? $block->escapeHtmlAttr(__('Added to Wish List')) : $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+       data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($block->getProduct()) ?>'
+       data-action="add-to-wishlist"
+       role="button">
+        <span><?= $isInWishlist ? $block->escapeHtml(__('Added to Wish List')) : $block->escapeHtml(__('Add to Wish List')) ?></span>
+    </a>
+<?php endif; ?>
+
+<script type="text/javascript">
+    require(['jquery', 'Magento_Customer/js/customer-data', 'underscore'], function ($, customerData, _) {
+        function updateWishlistIcons() {
+            var wishlistData = customerData.get('wishlist')();
+            console.log("Attempting to update Wishlist Icons. Data:", wishlistData);
+
+            if (wishlistData && wishlistData.items && Array.isArray(wishlistData.items)) {
+                $('.product-item').each(function() {
+                    var productId = $(this).data('product-id');
+                    var isInWishlist = wishlistData.items.some(item => item.product_id == productId);
+                    if (isInWishlist) {
+                        $(this).find('.action.towishlist').addClass('in-wishlist');
+                    }
+                });
+                console.log("Wishlist Icons Updated.");
+            } else {
+                console.log("Wishlist data empty or not an array.");
+            }
+        }
+
+        var debouncedUpdateWishlistIcons = _.debounce(updateWishlistIcons, 500);
+
+        // Subscription to wishlist data changes
+        customerData.get('wishlist').subscribe(function (updatedData) {
+            console.log("Wishlist Data updated:", updatedData);
+            debouncedUpdateWishlistIcons();
+        });
+
+        // Initial update when the page is ready
+        $(document).ready(function() {
+            setTimeout(function() {
+                debouncedUpdateWishlistIcons();
+            }, 1000); // Delay to ensure customer data is loaded
+        });
+    });
+</script>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Mydreamday_Saldo::saldo_checker" 
+             title="Saldo Checker" 
+             module="Mydreamday_Saldo" 
+             sortOrder="10" 
+             parent="Magento_Catalog::inventory"
+             action="saldo/index/index" 
+             resource="Mydreamday_Saldo::saldo_checker"/>
+    </menu>
+</config>

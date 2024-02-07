@@ -1,0 +1,47 @@
+<?php
+    $_order = $block->getOrder();
+    $postNordData = $this->helper('David\PostNord\Helper\Data')->getPostnordData($_order);
+    $returnPostNordData = $this->helper('David\PostNord\Helper\Data')->getRefundPostnordData($_order);
+?>
+
+<section class="admin__page-section order-view-billing-shipping">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Postnord Infomation') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-payment-method">
+            <div class="admin__page-section-item-content">
+                <?php if($postNordData): ?>
+                    <?php $information = current($postNordData->bookingResponse->idInformation); ?>
+                    <?php foreach($information->ids as $itemId): ?>
+                        <?php if( $itemId->idType =='itemId'): ?>
+                        <p><?= __('Tracking code : %1', $itemId->value) ?></p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <?php foreach($information->urls as $itemId): ?>
+                    <p><a target="_blank" href="<?= $itemId->url ?>"><?= __('TRACKING') ?></a></p>
+                    <?php endforeach; ?>
+                    <?php if($pdf = $this->helper('David\PostNord\Helper\Data')->getPdfFile($_order,$postNordData)): ?>
+                    <p><a target="_blank" href="<?= $pdf ?>"><?= __('Print shipping label') ?></a></p>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if($returnPostNordData): ?>
+                    <br/>
+                    <p><b><?php echo __('Return details :') ?></b></p>
+                    <?php $information = current($returnPostNordData->bookingResponse->idInformation); ?>
+                    <?php foreach($information->ids as $itemId): ?>
+                        <?php if( $itemId->idType =='itemId'): ?>
+                        <p><?= __('Tracking code : %1', $itemId->value) ?></p>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <?php foreach($information->urls as $itemId): ?>
+                    <p><a target="_blank" href="<?= $itemId->url ?>"><?= __('TRACKING') ?></a></p>
+                    <?php endforeach; ?>
+                    <?php if($returnPdf = $this->helper('David\PostNord\Helper\Data')->getPdfFile($_order,$returnPostNordData,'return')): ?>
+                    <p><a target="_blank" href="<?= $returnPdf ?>"><?= __('Print shipping label') ?></a></p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</section>

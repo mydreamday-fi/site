@@ -1,0 +1,139 @@
+
+<?php
+echo $this->getLayout()
+->createBlock('Magento\Cms\Block\Block')
+->setBlockId('custom-footer')
+->toHtml();
+?>
+<style type="text/css" media="screen">
+	.page-footer .footer.content{
+		max-width: 100%;
+    	padding: unset;
+	}
+	.page-footer .footer.content .custom-footer{
+		background: #2c2e32;
+    	margin: 0 auto;
+    	padding: 40px;
+    	color: #fff;
+    	font-family: 'Montserrat';
+    	text-align: left;
+    	font-size: 12px;
+	}
+	.page-footer .footer.content .custom-footer .container{
+		max-width: 1140px;
+		padding-left: 120px;
+	}
+	.page-footer .footer.content .custom-footer .custom-image img{
+		max-width: 180px;
+	}
+	.page-footer .footer.content .custom-footer .title{
+		text-transform: uppercase;
+    	padding-bottom: 30px;
+    	font-size: 14px;
+    	font-weight: bold;
+    	color: #fff;
+	}
+	.page-footer .footer.content .custom-footer .content ul li{
+		padding-bottom: 5px;
+		display: flex;
+	}
+	.page-footer .footer.content .custom-footer .content ul li a{
+		padding-left: 5px;
+	}
+	.page-footer .footer.content .copyright{
+		display: block;
+	    background: #2c2e32;
+	    font-size: 11px;
+	    font-family: 'Montserrat';
+	    color: #fff;
+	    padding-bottom: 25px;
+	}
+	.page-footer .footer.content .block.newsletter{
+		background: #414346;
+    	margin-bottom: 0px;
+    	padding: 25px;
+		color: #fff;
+	}
+	.page-footer .footer.content .cus-title{
+		font-size: 24px;
+    	padding-bottom: 20px;
+	}
+	.page-footer .footer.content .block.newsletter .form{
+		max-width: 100%;
+	}
+	.page-footer .footer.content .block.newsletter #newsletter{
+		min-width: 335px;
+    	padding: 10px 15px;
+    	border: none;
+	}
+	.page-footer .footer.content .block.newsletter button{
+		padding: 10px 20px;
+	}
+	.page-footer .footer.content .block.newsletter .cus-text{
+		padding-top: 10px;
+	    font-size: 11px;
+	    display: inline-block;
+	    max-width: 380px;
+	}
+	.page-footer{
+		margin-top: 30px;
+	}
+	.page-footer .footer.content .caret{
+		display: none;
+	}
+	@media (max-width: 991px) {
+		.page-footer .footer.content .copyright{
+			padding-top: 20px;
+		}
+		.page-footer .footer.content .custom-footer .container{
+			padding-left: 0px;
+		}
+		.page-footer .footer.content .custom-footer .custom-image img{
+			margin: 0 auto;
+			padding-bottom: 30px;
+		}
+		.page-footer .footer.content .custom-footer .title{
+			padding-bottom: 10px;
+			margin-top: 10px;
+		}
+		.page-footer .footer.content .caret{
+			float: right;
+		    display: inline-block;
+		}
+		.caret:before{
+		    line-height: inherit;
+		    color: inherit;
+		    content: "+";
+		    font-family: 'Montserrat';
+		    display: inline-block;
+		    font-size: 25px;
+		    font-weight: 100;
+		    overflow: hidden;
+		    speak: none;
+		    text-align: center;
+		    color: #fff;
+		}
+		.caret.active:before{
+		    line-height: inherit;
+		    color: inherit;
+		    content: "-";
+		    font-family: 'Montserrat';
+		    display: inline-block;
+		    font-size: 45px;
+		    margin-top: -7px;
+		    font-weight: 100;
+		    overflow: hidden;
+		    speak: none;
+		    text-align: center;
+		    color: #fff;
+		}
+		.custom-footer .content {
+		    display: none;
+		}
+	}
+	@media (max-width: 460px) {
+		.page-footer .footer.content .block.newsletter #newsletter {
+		    min-width: 100%;
+		}
+	}
+</style>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_CustomShippingMethod
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2021 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <route method="GET" url="/V1/bsscommerce/customshippingmethod/getconfig/:storeId">
+        <service class="Bss\CustomShippingMethod\Api\ManagementInterface" method="getConfig"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/bsscommerce/customshippingmethod/search">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/bsscommerce/customshippingmethod/getlist">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="getListCustomShipping"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/bsscommerce/customshippingmethod/getbyid/:id">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="GET" url="/V1/bsscommerce/customshippingmethod/getlist/storeid/:storeId">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="getListCustomShippingStore"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="DELETE" url="/V1/bsscommerce/customshippingmethod/delete/:id">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="delete"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+
+    <route method="POST" url="/V1/bsscommerce/customshippingmethod/save">
+        <service class="Bss\CustomShippingMethod\Api\CustomMethodRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Bss_CustomShippingMethod::api"/>
+        </resources>
+    </route>
+</routes>

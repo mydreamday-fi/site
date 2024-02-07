@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+		<add id="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction"  title="Customer Group Restriction" module="Meetanshi_PayshipRestriction" sortOrder="40" parent="Magento_Sales::sales" resource="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction"/>
+		
+		<add id="Meetanshi_PayshipRestriction::menu_payment" title="Payment Method Restriction" module="Meetanshi_PayshipRestriction" sortOrder="10" parent="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction" action="psrestrict/payshiprestriction/payment" resource="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction"/>
+
+		<add id="Meetanshi_PayshipRestriction::menu_shipping" title="Shipping Method Restriction" module="Meetanshi_PayshipRestriction" sortOrder="20" parent="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction" action="psrestrict/payshiprestriction/shipping" resource="Meetanshi_PayshipRestriction::meetanshi_paymentshippingrestriction"/>
+    </menu>
+</config>

@@ -1,0 +1,69 @@
+<?php /** @var \Magento\Wishlist\Block\Customer\Sidebar $block */ ?>
+
+<?php
+    $childHtml = $block->getChildHtml();
+    $srOnly = $block->getSrOnly();
+	
+	$wishlistViewModel = $block->getData('wishlistDataViewModel');
+	
+	// Magento 2.4.1 fix
+    if (!$wishlistViewModel) {
+		$wishlistViewModel = $this->helper(\Magento\Wishlist\Helper\Data::class);
+	}
+
+    if (!$wishlistViewModel->isAllow()) {
+        return;
+    }
+?>
+
+<div class="<?= $block->getSwitcherCssClass() ?>">
+    <?php if ($block->getLabel()) : ?>
+        <strong class="label switcher-label">
+            <span><?= $block->escapeHtml($block->getLabel()) ?></span>
+        </strong>
+    <?php endif ?>
+
+    <div class="<?= $block->getCssClass() ?>" >
+        <a class="action toggle switcher-trigger" data-bind="scope: 'wishlist'" 
+            href="<?= $block->escapeUrl($block->getHref()) ?>"
+            title="<?= $block->escapeHtml($block->getTitle()) ?>"
+            <?php if ($childHtml) : ?>
+                data-mage-init='<?php echo $this->getJsonConfig() ?>'
+                data-toggle="dropdown"
+                data-trigger-keypress-button="true"
+            <?php endif ?>
+        >
+            <?php if ($block->getIcon()) : ?>
+                <?php $srOnly = true ?>
+                <?= $block->getIcon() ?>
+            <?php endif ?>
+			<!-- ko if: wishlist().counter -->
+			<span data-bind="text: wishlist().counter"></span>
+			<!-- /ko -->
+
+            <strong class="<?= $srOnly ? 'abs-visually-hidden' : '' ?>">
+                <span><?= $block->escapeHtml($block->getTitle()) ?></span>
+            </strong>
+        </a>
+
+        <?php if ($childHtml) : ?>
+            <div class="dropdown switcher-dropdown" data-target="dropdown">
+                <?= $childHtml ?>
+            </div>
+        <?php endif ?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "wishlist": {
+                        "component": "Magento_Wishlist/js/view/wishlist"
+                    }
+                }
+            }
+        }
+    }
+</script>

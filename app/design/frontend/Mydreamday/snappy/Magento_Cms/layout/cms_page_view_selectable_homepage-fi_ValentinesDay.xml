@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<referenceContainer name="page.messages">
+				<block class="Magento\Framework\View\Element\Messages" name="messages" as="messages"/>
+		 </referenceContainer>
+		 
+		<referenceContainer name="page.top">
+			<block class="Magento\Cms\Block\Block" name="mdd_banner_slider_valentine">
+				<arguments>
+					<argument name="block_id" xsi:type="string">mdd_banner_slider_valentine</argument>
+				</arguments>
+			</block>
+			
+			<block class="Mydreamday\Custom\Block\Carousel\PopularCategories" name="popular.categories" template="Mydreamday_Custom::popularcategories.phtml" />
+			
+			<block class="Magento\Cms\Block\Block" name="mdd_baking_section">
+				<arguments>
+					<argument name="block_id" xsi:type="string">mdd_baking_section</argument>
+				</arguments>
+			</block>
+			
+			<block class="Mydreamday\Custom\Block\Carousel\PopularThemes" name="popular.themes" template="Mydreamday_Custom::popularthemes.phtml" />
+			
+			<block class="Mydreamday\Custom\Block\Carousel\FeaturedProducts" name="featured.products" template="Mydreamday_Custom::featuredproducts.phtml" />
+			
+			<block class="Mydreamday\Custom\Block\Carousel\NewProducts" name="new.products.slider" template="Mydreamday_Custom::newproducts.phtml" />
+			
+			<block class="Magento\Cms\Block\Block" name="mdd_promo_text">
+				<arguments>
+					<argument name="block_id" xsi:type="string">mdd_promo_text</argument>
+				</arguments>
+			</block>
+		</referenceContainer>
+	</body>
+</page>

@@ -1,0 +1,12 @@
+<?php 
+	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+	$productId = $objectManager->create('Magento\Catalog\Block\Product\View')->getProduct()->getId();
+	$product = $objectManager->create('Magento\Catalog\Model\Product')->load($productId);
+    $attribute = $product->getResource()->getAttribute('manufacturer');
+    $attributeValue = $attribute->getFrontend()->getValue($product);
+?>
+<div class="custom-manufacturer">
+	<?php if(!empty($product->getData('manufacturer'))): ?>
+		<?php echo $attributeValue; ?>
+	<?php endif; ?>
+</div>

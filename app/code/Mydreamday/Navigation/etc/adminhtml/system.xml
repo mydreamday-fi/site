@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="navigation" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <label>Mobile Navigation</label>
+            <tab>catalog</tab>
+            <resource>Mydreamday_Navigation::config_mobile_navigation</resource>
+            <group id="links" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Links Configuration</label>
+                <field id="customer_service_text" translate="label" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Customer Service Text</label>
+                </field>
+                <field id="customer_service_link" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Customer Service Link</label>
+                </field>
+                <field id="faq1_text" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 1 Text</label>
+                </field>
+                <field id="faq1_link" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 1 URL</label>
+                </field>
+                <field id="faq2_text" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 2 Text</label>
+                </field>
+                <field id="faq2_link" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 2 URL</label>
+                </field>
+                <field id="faq3_text" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 3 Text</label>
+                </field>
+                <field id="faq3_link" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>FAQ Link 3 URL</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

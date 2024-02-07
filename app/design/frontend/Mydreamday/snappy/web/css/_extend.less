@@ -1,0 +1,15 @@
+& when (@critical) {
+    :root {
+        & when (@header-panel__slideout) {
+            --header-panel-slideout: true;
+        }
+    }
+
+	@media @navigation__media-mobile {
+        & when (@header-panel__slideout) {
+            .page-header .panel.wrapper {
+                display: unset;
+            }
+        }
+    }
+}

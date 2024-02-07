@@ -1,0 +1,23 @@
+<?php $categories = $block->getCategoryList(); ?>
+<?php if($categories && count($categories) > 0):?>
+<div class="um-categories-viewmode category_page">
+
+<div class="content-block">
+    <div class="grid-block">
+	<ul class="layout-grid">
+        <?php foreach ($categories as $category): ?>
+		    <li class="viewmode-category-wrapper-no-images">
+                <div class="viewmode-category">
+					<a href="<?php echo $category->getUrl() ?>" >
+						<div class="viewmode-category-name-no-images">
+							<span><?php echo $category->getName() ?></span>
+						</div>
+					</a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+		</ul>
+    </div>
+</div>
+</div>
+<?php endif;?>

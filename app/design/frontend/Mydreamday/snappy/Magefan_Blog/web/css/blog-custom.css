@@ -1,0 +1,9 @@
+@media screen and (min-width: 768px) {
+	.blog-page.page-layout-2columns-right .page-main > .columns {
+		grid-template-columns: 1fr;
+		gap: 0;
+	}
+}
+.blog-page .page-main > .columns > .main .sidebar-additional {
+	display: none;
+}
