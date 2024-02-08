@@ -179,8 +179,13 @@ abstract class AbstractAction
         // for backward compatibility split data from old idx table on dimension tables
         foreach ($this->dimensionCollectionFactory->create() as $dimensions) {
             $insertSelect = $this->getConnection()->select()->from(
-                ['ip_tmp' => $this->_defaultIndexerResource->getIdxTable()],
-                array_keys($this->getConnection()->describeTable($this->tableMaintainer->getMainTableByDimensions($dimensions)))
+                ['ip_tmp' => $this->_defaultIndexerResource->getIdxTable()]
+				# 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+				# 1) "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+				# 2) https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Catalog/Model/Indexer/Product/Price/AbstractAction.php#L181-L183
+				# 3) The change has been ported by someone from Magento 2.4.7-beta2:
+				# https://github.com/magento/magento2/blob/2.4.7-beta2/app/code/Magento/Catalog/Model/Indexer/Product/Price/AbstractAction.php#L183
+				,array_keys($this->getConnection()->describeTable($this->tableMaintainer->getMainTableByDimensions($dimensions)))
             );
 
             foreach ($dimensions as $dimension) {
