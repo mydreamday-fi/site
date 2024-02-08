@@ -246,6 +246,9 @@ class Topmenu extends Template implements IdentityInterface
             }
 
             $html .= '<li ' . $this->_getRenderedMenuItemAttributes($child) . '>';
+			# 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+			# 2) https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Theme/Block/Html/Topmenu.php#L249-L251
             $html .= '<a href="' . $child->getUrl() . '" ' . $outermostClassCode . '>' . $this->escapeHtml(
                 $child->getName()
             ) . '</a>' . $this->_addSubMenu(
