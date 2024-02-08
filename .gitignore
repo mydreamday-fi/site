@@ -47,6 +47,9 @@
 # 3) The change has been ported by someone from Magento 2.4.7-beta2:
 # https://github.com/magento/magento2/blob/2.4.7-beta2/app/code/Magento/Catalog/Model/Indexer/Product/Price/AbstractAction.php#L183
 !/vendor/magento/module-catalog/Model/Indexer/Product/Price/AbstractAction.php
+# 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+!/vendor/magento/module-theme/Block/Html/Topmenu.php
 /vendor/magento/magento2-base
 /vendor/magento/magento2-functional-testing-framework
 /vendor/tubalmartin
