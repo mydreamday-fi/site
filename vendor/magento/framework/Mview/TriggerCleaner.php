@@ -87,6 +87,9 @@ class TriggerCleaner
         $remainingTriggers = array_diff_key($this->DbTriggers, $this->processedTriggers);
         foreach ($remainingTriggers as $trigger) {
             $view = $this->createViewByTableName($trigger['EVENT_OBJECT_TABLE']);
+			# 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+			# 2) https://github.com/magento/magento2/blob/2.4.6/lib/internal/Magento/Framework/Mview/TriggerCleaner.php#L90-L91
             if ($view->getActionClass()) {
                 $view->unsubscribe();
                 $view->getState()->delete();

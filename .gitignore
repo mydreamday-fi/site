@@ -32,7 +32,8 @@
 # https://mage2.pro/t/6178
 !/vendor/magento/framework/Interception/PluginListGenerator.php
 # 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
-# "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+# 1) "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
+# 2) https://github.com/magento/magento2/blob/2.4.6/lib/internal/Magento/Framework/Mview/TriggerCleaner.php#L90-L91
 !/vendor/magento/framework/Mview/TriggerCleaner.php
 # 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 # "How to fix the «Invalid template file» / «require_js.phtml» failure for 2.3 ≤ Magento < 2.4.5 in Windows?"
