@@ -67,7 +67,10 @@ class ClassesScanner implements ClassesScannerInterface
     public function getList($path)
     {
         // phpcs:ignore
-        $realPath = realpath($path);
+		# 2024-02-07 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+		# "How to fix intereceptors generation on `bin/magento setup:di:compile` in Magento ≥ 2.2 in Windows?":
+		# https://mage2.pro/t/4702
+        $realPath = str_replace(DIRECTORY_SEPARATOR, '/', realpath($path));
         $isGeneration = strpos($realPath, $this->generationDirectory) === 0;
 
         // Generation folders should not have their results cached since they may actually change during compile
