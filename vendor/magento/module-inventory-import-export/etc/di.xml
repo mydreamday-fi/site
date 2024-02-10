@@ -28,7 +28,15 @@
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemImporterInterface">
         <plugin name="update_configurable_products_stock_item_status" disabled="true"/>
-        <plugin name="update_grouped_product_stock_status_plugin" disabled="true"/>
+<!-- 2024-02-10 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+1) «Reference to undeclared plugin with name 'update_grouped_product_stock_status_plugin'»:
+https://github.com/mydreamday-fi/site/issues/12
+2.1) The `update_grouped_product_stock_status_plugin` plugin is declared here:
+https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/GroupedImportExport/etc/di.xml#L16-L18
+2.2) But the `Magento_GroupedImportExport` module is disabled by someone via the `app/etc/config.php` file,
+so Magento regards the `update_grouped_product_stock_status_plugin` plugin as «undeclared»
+(despite the `disabled="true"` statement)
+        <plugin name="update_grouped_product_stock_status_plugin" disabled="true"/> -->
     </type>
     <type name="Magento\CatalogImportExport\Model\StockItemProcessorInterface">
         <plugin name="importStockItemDataForSourceItem" type="Magento\InventoryImportExport\Plugin\Import\SourceItemImporter"/>
