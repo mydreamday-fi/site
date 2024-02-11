@@ -1,6 +1,6 @@
 <?php
 return [
-    'modules' => [
+    'modules' => array_filter([
         'Magento_Store' => 1,
         'Magento_Config' => 1,
         'Magento_AdminAnalytics' => 1,
@@ -529,5 +529,5 @@ return [
         'Temando_ShippingRemover' => 0,
         'Tm_Subcategory' => 1,
         'Trollweb_Bring' => 0
-    ]
+    ], function(string $m):bool {return !in_array($m, []);}, ARRAY_FILTER_USE_KEY)
 ];
