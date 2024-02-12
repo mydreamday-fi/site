@@ -70,10 +70,11 @@
 !/vendor/magento/module-inventory-import-export/etc/di.xml
 # 2024-02-10 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 # 1) "Prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`": https://github.com/mydreamday-fi/site/issues/32
-# 2) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
-# 3) "`Klarna\Kco\Model\Checkout\Kco\Session::getQuote()` causes an infinite loop
+# 2) "How to prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`?": https://mage2.pro/t/6416
+# 3) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
+# 4) "`Klarna\Kco\Model\Checkout\Kco\Session::getQuote()` causes an infinite loop
 # with `Magento\Quote\Model\Quote::_afterLoad()`": 	https://github.com/mydreamday-fi/site/issues/31
-# 4) «we randomly get times of 100% CPU load, and the whole site becomes unresponsive for 2 - 60 minutes»:
+# 5) «we randomly get times of 100% CPU load, and the whole site becomes unresponsive for 2 - 60 minutes»:
 # https://github.com/mydreamday-fi/site/issues/8
 !/vendor/magento/module-quote/Model/Quote.php
 # 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro

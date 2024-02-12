@@ -2471,12 +2471,13 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
 			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 			# 1) "Prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`":
 			# https://github.com/mydreamday-fi/site/issues/32
-			# 2) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
-			# 3) The original code:
+			# 2) "How to prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`?": https://mage2.pro/t/6416
+			# 3) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
+			# 4) The original code:
 			# https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Quote/Model/Quote.php#L2471-L2473
-			# 4) "`Klarna\Kco\Model\Checkout\Kco\Session::getQuote()` causes an infinite loop
+			# 5) "`Klarna\Kco\Model\Checkout\Kco\Session::getQuote()` causes an infinite loop
 			# with `Magento\Quote\Model\Quote::_afterLoad()`": 	https://github.com/mydreamday-fi/site/issues/31
-			# 5) «we randomly get times of 100% CPU load, and the whole site becomes unresponsive for 2 - 60 minutes»:
+			# 6) «we randomly get times of 100% CPU load, and the whole site becomes unresponsive for 2 - 60 minutes»:
 			# https://github.com/mydreamday-fi/site/issues/8
 			$this->setTriggerRecollect(0);
 			$this->save();
