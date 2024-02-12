@@ -73,6 +73,8 @@ class Responsive extends SpecifyDimensionOptimiser
 					 * 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 					 * 1) "The `Swissup_Pagespeed` module breaks URLs of categories' images in Windows":
 					 * https://github.com/mydreamday-fi/site/issues/17
+					 * 2) "The `Swissup_Pagespeed` module breaks URLs of images in Windows":
+					 * https://github.com/mydreamday-fi/site/issues/19
 					 * 2) I replaced `DIRECTORY_SEPARATOR` with `/`.
 					 * 3) The original code:
 					 * https://github.com/mydreamday-fi/site/blob/2024-02-12/vendor/swissup/module-pagespeed/Model/Optimiser/Image/Responsive.php#L72
@@ -87,7 +89,7 @@ class Responsive extends SpecifyDimensionOptimiser
 					 * 			$newImageHTML = str_replace('/', '\/', $newImageHTML);
 					 * 		}
 					 * 5) It fixes URLs of categories' images only.
-					 * It does not fix URLs of products' images: https://github.com/mydreamday-fi/site/issues/18
+					 * It is not enough to fix URLs of products' images: https://github.com/mydreamday-fi/site/issues/18
 					 */
                     $urlPath = str_replace($basename, $resolution . 'x/' . $basename, $srcValue);
                 } else {
