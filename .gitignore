@@ -61,8 +61,8 @@
 # https://github.com/mydreamday-fi/site/issues/17
 !/vendor/magento/module-catalog/Model/View/Asset/Image.php
 # 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
-# "Implement a custom logging of «Infinite loop detected, review the trace for the looping path»":
-# https://github.com/mydreamday-fi/site/issues/29
+# "Prevent the «Infinite loop detected, review the trace for the looping path» exception
+# in `Magento\Checkout\Model\Session::getQuote()`": https://github.com/mydreamday-fi/site/issues/33
 !/vendor/magento/module-checkout/Model/Session.php
 # 2024-02-10 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 # «Reference to undeclared plugin with name 'update_grouped_product_stock_status_plugin'»:

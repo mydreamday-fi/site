@@ -51,10 +51,14 @@ class Session extends \Magento\Framework\Session\SessionManager
      * A flag to track when the quote is being loaded and attached to the session object.
      *
      * Used in trigger_recollect infinite loop detection.
-     *
-     * @var bool
+	 *
+	 * 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+	 * "Prevent the «Infinite loop detected, review the trace for the looping path» exception
+	 * *in `Magento\Checkout\Model\Session::getQuote()`": https://github.com/mydreamday-fi/site/issues/33
+     * @used-by self::getQuote()
+     * @var int
      */
-    private $isLoading = false;
+    private $_quoteRetrivalCount = 0;
 
     /**
      * Loaded order instance
@@ -237,17 +241,16 @@ class Session extends \Magento\Framework\Session\SessionManager
         $this->_eventManager->dispatch('custom_quote_process', ['checkout_session' => $this]);
 
         if ($this->_quote === null) {
-            if ($this->isLoading) {
-				# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
-				# "Implement a custom logging of «Infinite loop detected, review the trace for the looping path»":
-				# https://github.com/mydreamday-fi/site/issues/29
-				df_log_l($this, [
-					'message' => 'Infinite loop detected, review the trace for the looping path'
-					,'quote' =>  $this->getQuoteId()
-				], 'loop');
+			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "Prevent the «Infinite loop detected, review the trace for the looping path» exception
+			# in `Magento\Checkout\Model\Session::getQuote()`":
+			# https://github.com/mydreamday-fi/site/issues/33
+			# 2) "Prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`":
+			# https://github.com/mydreamday-fi/site/issues/32
+			$this->_quoteRetrivalCount++;
+            if (2 < $this->_quoteRetrivalCount) {
                 throw new \LogicException("Infinite loop detected, review the trace for the looping path");
             }
-            $this->isLoading = true;
             $quote = $this->quoteFactory->create();
             if ($this->getQuoteId()) {
                 try {
@@ -280,8 +283,13 @@ class Session extends \Magento\Framework\Session\SessionManager
                          */
                         $quote = $this->quoteRepository->get($this->getQuoteId());
                     }
-
-                    if ($quote->getTotalsCollectedFlag() === false) {
+					# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+					# 1) "Prevent the «Infinite loop detected, review the trace for the looping path» exception
+					# in `Magento\Checkout\Model\Session::getQuote()`":
+					# https://github.com/mydreamday-fi/site/issues/33
+					# 2) "Prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`":
+					# https://github.com/mydreamday-fi/site/issues/32
+                    if (2 > $this->_quoteRetrivalCount && $quote->getTotalsCollectedFlag() === false) {
                         $quote->collectTotals();
                     }
                 } catch (NoSuchEntityException $e) {
@@ -311,7 +319,13 @@ class Session extends \Magento\Framework\Session\SessionManager
 
             $quote->setStore($this->_storeManager->getStore());
             $this->_quote = $quote;
-            $this->isLoading = false;
+			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "Prevent the «Infinite loop detected, review the trace for the looping path» exception
+			# in `Magento\Checkout\Model\Session::getQuote()`":
+			# https://github.com/mydreamday-fi/site/issues/33
+			# 2) "Prevent infinite loops for `Magento\Quote\Model\Quote::_afterLoad()`":
+			# https://github.com/mydreamday-fi/site/issues/32
+            $this->_quoteRetrivalCount--;
         }
 
         if (!$this->isQuoteMasked() && !$this->_customerSession->isLoggedIn() && $this->getQuoteId()) {
