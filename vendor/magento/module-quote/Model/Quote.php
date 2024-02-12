@@ -2476,6 +2476,7 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
 				df_report("mage2.pro/trigger_recollect/{$this->getId()}.log", df_dump_ds($m), true);
 			};
 			$l(df_context());
+			$l(df_bt_s());
 			$l('collectTotals');
 			try {
 				$this->collectTotals();
