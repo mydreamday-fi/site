@@ -2466,11 +2466,30 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
      */
     protected function _afterLoad()
     {
-        // collect totals and save me, if required
+		// collect totals and save me, if required
         if (1 == $this->getTriggerRecollect()) {
-            $this->collectTotals()
-                ->setTriggerRecollect(0)
-                ->save();
+			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
+			# 2) The original code:
+			# https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Quote/Model/Quote.php#L2471-L2473
+			$l = function($m):void {
+				df_report("mage2.pro/trigger_recollect/{$this->getId()}.log", df_dump_ds($m), true);
+			};
+			$l(df_context());
+			$l('collectTotals');
+			try {
+				$this->collectTotals();
+				$l('setTriggerRecollect(0)');
+				$this->setTriggerRecollect(0);
+				$l('BEFORE save()');
+				$this->save();
+				$l('AFTER save()');
+			}
+			catch (\Exception $e) {
+				$l('EXCEPTION: ' . $e->getMessage());
+				df_log_l($this, $e);
+				throw $e;
+			}
         }
         return parent::_afterLoad();
     }
