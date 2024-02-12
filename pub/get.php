@@ -58,7 +58,10 @@ if (file_exists($configCacheFile) && is_readable($configCacheFile)) {
 
         // Serve file if it's materialized
         if ($mediaDirectory) {
-            $fileAbsolutePath = __DIR__ . '/' . $relativePath;
+			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "How to adapt `pub/get.php` to Windows in Magento ≥ 2.4.2?": https://mage2.pro/t/6415
+			# 2) The original code: https://github.com/magento/magento2/blob/2.4.6/pub/get.php#L61
+            $fileAbsolutePath = str_replace('\\', '/', __DIR__) . '/' . $relativePath;
             $fileRelativePath = str_replace(rtrim($mediaDirectory, '/') . '/', '', $fileAbsolutePath);
 
             if (!$isAllowed($fileRelativePath, $allowedResources)) {
