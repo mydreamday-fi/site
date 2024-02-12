@@ -238,6 +238,13 @@ class Session extends \Magento\Framework\Session\SessionManager
 
         if ($this->_quote === null) {
             if ($this->isLoading) {
+				# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+				# "Implement a custom logging of «Infinite loop detected, review the trace for the looping path»":
+				# https://github.com/mydreamday-fi/site/issues/29
+				df_log_l($this, [
+					'message' => 'Infinite loop detected, review the trace for the looping path'
+					,'quote' =>  $this->getQuoteId()
+				], 'loop');
                 throw new \LogicException("Infinite loop detected, review the trace for the looping path");
             }
             $this->isLoading = true;
