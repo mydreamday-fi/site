@@ -64,6 +64,14 @@
 # «Reference to undeclared plugin with name 'update_grouped_product_stock_status_plugin'»:
 # https://github.com/mydreamday-fi/site/issues/12
 !/vendor/magento/module-inventory-import-export/etc/di.xml
+# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+# 1) "«Environment emulation nesting is not allowed» on sending invoice / shipment / creditmemo emails":
+# https://github.com/mydreamday-fi/site/issues/24
+# 2) "How did I fix «Environment emulation nesting is not allowed»
+# on sending invoice / shipment / creditmemo emails in 2.4.4 ≤ Magento < 2.4.7-beta2?": https://mage2.pro/t/6392
+!/vendor/magento/module-sales/Model/Order/Email/Sender/CreditmemoSender.php
+!/vendor/magento/module-sales/Model/Order/Email/Sender/InvoiceSender.php
+!/vendor/magento/module-sales/Model/Order/Email/Sender/ShipmentSender.php
 # 2024-02-08 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 # 1) "Document the website's differences from Magento 2.4.6": https://github.com/mydreamday-fi/site/issues/5
 # 2.1) https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Theme/Block/Html/Topmenu.php#L249-L251
