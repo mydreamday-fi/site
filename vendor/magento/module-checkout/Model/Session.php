@@ -48,10 +48,7 @@ class Session extends \Magento\Framework\Session\SessionManager
     protected $_loadInactive = false;
 
     /**
-     * A flag to track when the quote is being loaded and attached to the session object.
-     *
      * Used in trigger_recollect infinite loop detection.
-	 *
 	 * 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
 	 * "Prevent the «Infinite loop detected, review the trace for the looping path» exception
 	 * *in `Magento\Checkout\Model\Session::getQuote()`": https://github.com/mydreamday-fi/site/issues/33
