@@ -129,8 +129,20 @@ class Image implements LocalInterface
         switch ($this->mediaFormatUrl) {
             case CatalogMediaConfig::IMAGE_OPTIMIZATION_PARAMETERS:
                 return $this->getUrlWithTransformationParameters();
-            case CatalogMediaConfig::HASH:
-                return $this->context->getBaseUrl() . DIRECTORY_SEPARATOR . $this->getImageInfo();
+			case CatalogMediaConfig::HASH:
+				# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+				# 1) "How to adapt `Magento\Catalog\Model\View\Asset\Image::getUrl()` to Windows in Magento ≥ 2.4.2?":
+				# https://mage2.pro/t/6411
+				# 2) "The `Swissup_Pagespeed` module breaks URLs of images in Windows":
+				# https://github.com/mydreamday-fi/site/issues/19
+				# 3) "The `Swissup_Pagespeed` module breaks URLs of products' images in Windows":
+				# https://github.com/mydreamday-fi/site/issues/18
+				# 4) "The `Swissup_Pagespeed` module breaks URLs of categories' images in Windows":
+				# https://github.com/mydreamday-fi/site/issues/17
+				# 5) I replaced `DIRECTORY_SEPARATOR` with '/'.
+				# 6) The original code:
+				# https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Catalog/Model/View/Asset/Image.php#L133
+                return $this->context->getBaseUrl() . '/' . $this->getImageInfo();
             default:
                 throw new LocalizedException(
                     __("The specified Catalog media URL format '$this->mediaFormatUrl' is not supported.")
@@ -269,10 +281,16 @@ class Image implements LocalInterface
      */
     private function getImageInfo()
     {
-        $path = $this->getModule()
-            . DIRECTORY_SEPARATOR . $this->getMiscPath()
-            . DIRECTORY_SEPARATOR . $this->getFilePath();
-        return preg_replace('|\Q'. DIRECTORY_SEPARATOR . '\E+|', DIRECTORY_SEPARATOR, $path);
+		# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+		# 1) "How to adapt `Magento\Catalog\Model\View\Asset\Image::getImageInfo()` to Windows in Magento ≥ 2.3.0?":
+		# https://mage2.pro/t/6412
+		# 2) "The `Swissup_Pagespeed` module breaks URLs of images in Windows": https://github.com/mydreamday-fi/site/issues/19
+		# 3) "The `Swissup_Pagespeed` module breaks URLs of products' images in Windows": https://github.com/mydreamday-fi/site/issues/18
+		# 4) "The `Swissup_Pagespeed` module breaks URLs of categories' images in Windows":
+		# https://github.com/mydreamday-fi/site/issues/17
+		# 5) The original code:
+		# https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Catalog/Model/View/Asset/Image.php#L272-L275
+        return "{$this->getModule()}/{$this->getMiscPath()}" . $this->getFilePath();
     }
 
     /**
