@@ -2472,25 +2472,14 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
 			# 1) "`trigger_recollect` is not reset to `0` for some quotes": https://github.com/mydreamday-fi/site/issues/26
 			# 2) The original code:
 			# https://github.com/magento/magento2/blob/2.4.6/app/code/Magento/Quote/Model/Quote.php#L2471-L2473
-			$l = function($m):void {
-				df_report("mage2.pro/trigger_recollect/{$this->getId()}.log", df_dump_ds($m), true);
-			};
-			$l(df_context());
-			$l(df_bt_s());
-			$l('collectTotals');
-			try {
-				$this->collectTotals();
-				$l('setTriggerRecollect(0)');
-				$this->setTriggerRecollect(0);
-				$l('BEFORE save()');
-				$this->save();
-				$l('AFTER save()');
-			}
-			catch (\Exception $e) {
-				$l('EXCEPTION: ' . $e->getMessage());
-				df_log_l($this, $e);
-				throw $e;
-			}
+			# 3) "`Klarna\Kco\Model\Checkout\Kco\Session::getQuote()` causes an infinite loop
+			# with `Magento\Quote\Model\Quote::_afterLoad()`": 	https://github.com/mydreamday-fi/site/issues/31
+			# 4) «we randomly get times of 100% CPU load, and the whole site becomes unresponsive for 2 - 60 minutes»:
+			# https://github.com/mydreamday-fi/site/issues/8
+			$this->setTriggerRecollect(0);
+			$this->save();
+			$this->collectTotals();
+			$this->save();
         }
         return parent::_afterLoad();
     }
