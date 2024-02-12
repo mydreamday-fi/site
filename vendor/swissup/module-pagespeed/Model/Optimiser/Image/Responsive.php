@@ -69,7 +69,27 @@ class Responsive extends SpecifyDimensionOptimiser
 
             foreach ($resolutions as $resolution) {
                 if ($resolution !== 1) {
-                    $urlPath = str_replace($basename, $resolution . 'x' . DIRECTORY_SEPARATOR . $basename, $srcValue);
+					/**
+					 * 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+					 * 1) "The `Swissup_Pagespeed` module breaks URLs of categories' images in Windows":
+					 * https://github.com/mydreamday-fi/site/issues/17
+					 * 2) I replaced `DIRECTORY_SEPARATOR` with `/`.
+					 * 3) The original code:
+					 * https://github.com/mydreamday-fi/site/blob/2024-02-12/vendor/swissup/module-pagespeed/Model/Optimiser/Image/Responsive.php#L72
+					 * 4) The `\` character (`DIRECTORY_SEPARATOR` in Windows) is wrongly handled by
+					 * @see \Swissup\Pagespeed\Model\Optimiser\Image\WebP::process():
+					 * 		$_imageHTML = $imageHTML;
+					 * 		$_imageHTML = preg_replace('/\\\\/', '', $_imageHTML);
+					 * 		$hasSlashes = $_imageHTML !== $imageHTML;
+					 * 		<…>
+					 * 		if ($hasSlashes) {
+					 * 			$newImageHTML = addslashes($newImageHTML);
+					 * 			$newImageHTML = str_replace('/', '\/', $newImageHTML);
+					 * 		}
+					 * 5) It fixes URLs of categories' images only.
+					 * It does not fix URLs of products' images: https://github.com/mydreamday-fi/site/issues/18
+					 */
+                    $urlPath = str_replace($basename, $resolution . 'x/' . $basename, $srcValue);
                 } else {
                     $urlPath = $srcValue;
                 }

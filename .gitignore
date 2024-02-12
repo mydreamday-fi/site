@@ -57,7 +57,7 @@
 # 2.2) https://github.com/mydreamday-fi/site/blob/2024-02-08-3/vendor/magento/module-theme/Block/Html/Topmenu.php#L249-L254
 !/vendor/magento/module-theme/Block/Html/Topmenu.php
 # 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
-# "The `Swissup_Pagespeed` module breaks URLs of images in Windows": https://github.com/mydreamday-fi/site/issues/19
+# "The `Swissup_Pagespeed` module breaks URLs of categories' images in Windows": https://github.com/mydreamday-fi/site/issues/17
 !/vendor/swissup/module-pagespeed/Model/Optimiser/Image/Responsive.php
 /vendor/magento/magento2-base
 /vendor/magento/magento2-functional-testing-framework
