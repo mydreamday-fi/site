@@ -119,6 +119,14 @@ class ShipmentSender extends Sender
 
         if (!$this->globalConfig->getValue('sales_email/general/async_sending') || $forceSyncMode) {
             $order = $shipment->getOrder();
+			# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+			# 1) "«Environment emulation nesting is not allowed» on sending invoice / shipment / creditmemo emails":
+			# https://github.com/mydreamday-fi/site/issues/24
+			# 2) "How did I fix «Environment emulation nesting is not allowed»
+			# on sending invoice / shipment / creditmemo emails in 2.4.4 ≤ Magento < 2.4.7-beta2?": https://mage2.pro/t/6392
+			# 3) https://github.com/magento/magento2/blob/2.4.7-beta2/app/code/Magento/Sales/Model/Order/Email/Sender/CreditmemoSender.php#L121
+			# 4) https://github.com/magento/magento2/issues/35603#issuecomment-1419257643
+			$paymentHTML = $this->getPaymentHtml($order);
             $this->identityContainer->setStore($order->getStore());
             $this->appEmulation->startEnvironmentEmulation($order->getStoreId(), Area::AREA_FRONTEND, true);
             $transport = [
@@ -128,7 +136,15 @@ class ShipmentSender extends Sender
                 'shipment_id' => $shipment->getId(),
                 'comment' => $shipment->getCustomerNoteNotify() ? $shipment->getCustomerNote() : '',
                 'billing' => $order->getBillingAddress(),
-                'payment_html' => $this->getPaymentHtml($order),
+				# 2024-02-12 Dmitrii Fediuk https://upwork.com/fl/mage2pro
+				# 1) "«Environment emulation nesting is not allowed» on sending invoice / shipment / creditmemo emails":
+				# https://github.com/mydreamday-fi/site/issues/24
+				# 2) "How did I fix «Environment emulation nesting is not allowed»
+				# on sending invoice / shipment / creditmemo emails in 2.4.4 ≤ Magento < 2.4.7-beta2?":
+				# https://mage2.pro/t/6392
+				# 3) https://github.com/magento/magento2/blob/2.4.7-beta2/app/code/Magento/Sales/Model/Order/Email/Sender/CreditmemoSender.php#L121
+				# 4) https://github.com/magento/magento2/issues/35603#issuecomment-1419257643
+                'payment_html' => $paymentHTML,
                 'store' => $order->getStore(),
                 'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
                 'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
